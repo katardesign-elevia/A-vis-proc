@@ -1,0 +1,54 @@
+# Every push to main: build web/index.html, check the riddles, then upload what changed to avisproc.cz.
+# FTP login comes from the repository settings (Settings → Secrets and variables → Actions):
+#   variables FTP_SERVER, FTP_USERNAME, FTP_DIR (e.g. avisproc.cz/web/) and the secret FTP_PASSWORD.
+# Until those exist, the run only builds and checks.
+name: Deploy to avisproc.cz
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      READY: ${{ secrets.FTP_PASSWORD != '' && vars.FTP_SERVER != '' && vars.FTP_USERNAME != '' && vars.FTP_DIR != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build index.html
+        run: python3 tools/build.py src/hra.html web/index.html
+
+      - name: Check riddles and the game script
+        run: node tools/test-riddles.js src/hra.html web
+
+      - name: Check the leaderboard PHP
+        run: php -l web/api/zebricek.php
+
+      - name: Upload changed files to the hosting
+        if: env.READY == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ vars.FTP_SERVER }}
+          username: ${{ vars.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./web/
+          server-dir: ${{ vars.FTP_DIR }}
+          # Live leaderboard data and the admin password exist only on the server: never upload or delete them.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.DS_Store
+            api/zebricek-data.php
+            api/zebricek-limity.php
+            api/spravce-heslo.php
+
+      - name: FTP not set up yet
+        if: env.READY != 'true'
+        run: echo "::notice::Built and checked, but not uploaded — add FTP_SERVER, FTP_USERNAME, FTP_DIR (variables) and FTP_PASSWORD (secret) in the repository settings."

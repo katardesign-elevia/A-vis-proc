@@ -1,0 +1,7 @@
+# A víš proč? — browsers always check for a fresh page, so everyone gets the latest version right after an upload.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html?$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+

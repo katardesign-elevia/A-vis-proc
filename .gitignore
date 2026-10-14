@@ -1,0 +1,11 @@
+# built from src/hra.html by tools/build.py (locally and on GitHub)
+web/index.html
+# live data and the admin password live only on the hosting
+web/api/zebricek-data.php
+web/api/zebricek-limity.php
+web/api/spravce-heslo.php
+# local tooling
+.DS_Store
+node_modules/
+tools/*-prof/
+shots/
