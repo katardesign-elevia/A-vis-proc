@@ -30,7 +30,15 @@ Jednorázové nastavení v repozitáři: **Settings → Secrets and variables �
 1. Obrázek 1536×1024 (otázka vlevo, odpověď vpravo, bílý pruh uprostřed) jako `.webp` do `web/obrazky/`.
 2. Záznam do `POOL` v `src/hra.html`: `id`, `src`, `split` (sloupce bílého pruhu), `otazka`, `odpoved`,
    `klic` (co se počítá jako správně), `skoro` („Skoro!“), `vazne` (pravda, ale ne vtip), `emoji`.
-3. `node tools/test-riddles.js src/hra.html web`
+3. Anglickou verzi do `en: {...}` téhož záznamu (`otazka`, `odpoved`, `klic`, `skoro`, `vazne`).
+4. `node tools/test-riddles.js src/hra.html web`
+
+## Čeština / English
+
+Přepínač CZ | EN je na úvodní stránce (odkaz `?lang=en` otevře rovnou angličtinu). Texty hry jsou v `TXT` v `src/hra.html`.
+Anglický režim hraje jen hádanky, které už mají anglický obrázek: obrázek do `web/obrazky/en/<id>.webp`
+a do `en: {...}` přidat `src` a `split`. Dokud žádný není, anglická verze ukazuje „English riddles coming soon“.
+Každý jazyk si pamatuje svou rozehranou hru zvlášť; žebříček je společný.
 
 ## Lokálně
 

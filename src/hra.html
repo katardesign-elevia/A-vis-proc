@@ -275,7 +275,13 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   box-shadow:3px 3px 0 var(--ink);transform:rotate(-2deg);
 }
 .lbchip .tro{width:1.1em;height:auto}
-@media (max-width:360px){.lbchip .lbt{display:none}}
+/* language switch on the title page */
+.lang{flex:none;display:flex;gap:2px;padding:3px;background:#fff;border:2.5px solid var(--ink);border-radius:var(--sketch-s);box-shadow:2px 3px 0 var(--ink);transform:rotate(-1deg)}
+.lang button{padding:4px 7px 6px;border:0;border-radius:7px;background:none;cursor:pointer;font:400 19px/1 var(--f-display);color:var(--muted)}
+.lang button[aria-pressed="true"]{background:var(--hl);color:var(--ink)}
+.lang button:not([aria-pressed="true"]):hover{color:var(--ink)}
+html[lang="en"] .logo{font-size:clamp(52px,min(10.5vw,12vh),118px)}
+@media (max-width:360px){.lbchip .lbt{display:none}.rk-badge{display:none}}
 .rank{
   flex:0 1 auto;min-width:0;display:flex;align-items:center;gap:8px;padding:4px 12px 6px 5px;text-align:left;
   background:#fff;border:2.5px solid var(--ink);border-radius:var(--sketch-s);box-shadow:2px 3px 0 var(--ink);transform:rotate(1deg);
@@ -520,6 +526,8 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   .rk-badge{width:28px;height:28px}
   .rk-txt b{font-size:18px}
   .rk-txt small{display:none}
+  .htop:has(.rank:not([hidden])) .lbt{display:none}
+  .lang button{padding:4px 6px 6px;font-size:17px}
   .nb-stage{min-height:270px;margin-block:14px 30px}
   .sub{max-width:7.6em;margin-inline:auto}
   .pol{width:clamp(70px,22vw,104px)}
@@ -577,10 +585,10 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
 </style>
 
 <header class="hud" id="hra-top">
-  <button class="hbtn" id="domu" type="button" title="Zpět na úvod" aria-label="Zpět na úvod">
+  <button class="hbtn" id="domu" type="button" title="Zpět na úvod" aria-label="Zpět na úvod" data-t-aria="home" data-t-title="home">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg>
   </button>
-  <button class="prog" id="prog" type="button" aria-label="Přehled hádanek">
+  <button class="prog" id="prog" type="button" aria-label="Přehled hádanek" data-t-aria="overview">
     <span class="prog-n"><b id="prog-i">1</b> / <span id="prog-t">11</span></span>
     <span class="prog-bar" id="prog-bar" aria-hidden="true"></span>
   </button>
@@ -590,7 +598,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       <span id="body-n">0</span>
       <span class="streak" id="serie" hidden></span>
     </span>
-    <button class="hbtn snd" id="zvuk" type="button" aria-label="Zvuk" aria-pressed="true" title="Zvuk">
+    <button class="hbtn snd" id="zvuk" type="button" aria-label="Zvuk" aria-pressed="true" title="Zvuk" data-t-aria="sound">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
         <path class="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>
@@ -603,11 +611,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
 <main class="stage" id="hra-stage">
   <div class="pair" id="pair">
     <div class="slot sq">
-      <span class="chip cy" aria-hidden="true">Otázka</span>
+      <span class="chip cy" aria-hidden="true" data-t="question">Otázka</span>
       <div class="card q" id="otazka" role="img" aria-label="Otázka"></div>
     </div>
     <div class="slot sm">
-      <span class="chip pk" aria-hidden="true">Odpověď</span>
+      <span class="chip pk" aria-hidden="true" data-t="answer">Odpověď</span>
       <button class="card m" id="dvirka" type="button" aria-label="Otevřít dvířka a ukázat odpověď">
         <span class="answer"></span>
         <span class="doors" id="doors">
@@ -619,7 +627,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
             <svg class="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
             <svg class="i-tap" viewBox="0 0 24 24" stroke="#1B2A57" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M9.2 12.5V4.6a1.6 1.6 0 0 1 3.2 0v6.3l.2-1.6a1.6 1.6 0 0 1 3.1.4v1.5l.2-.6a1.5 1.5 0 0 1 2.9.6v4.6a6.2 6.2 0 0 1-6.2 6.2h-.9a5.6 5.6 0 0 1-4.4-2.1l-3-3.8a1.6 1.6 0 0 1 2.4-2.1z" fill="#fff"/></svg>
           </span>
-          <b>Protože…</b>
+          <b data-t="because">Protože…</b>
           <i class="lock" id="cedulka">nejdřív tipni</i>
         </span>
         <span class="flash"></span>
@@ -632,15 +640,15 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   <p class="hint" id="hint" aria-live="polite">Máš jeden tip. Napiš ho, nebo ho řekni.</p>
   <div class="dock">
   <form class="guess" id="tip" autocomplete="off">
-    <label class="sr" for="tip-text">Tvoje odpověď</label>
-    <input id="tip-text" type="text" placeholder="Protože…" enterkeyhint="send" maxlength="140" spellcheck="false" autocomplete="off">
-    <button class="btn cyan mic" id="mic" type="button" aria-label="Říct odpověď nahlas" aria-pressed="false" title="Říct odpověď nahlas" hidden>
+    <label class="sr" for="tip-text" data-t="yourAnswer">Tvoje odpověď</label>
+    <input id="tip-text" type="text" placeholder="Protože…" data-t-ph="because" enterkeyhint="send" maxlength="140" spellcheck="false" autocomplete="off">
+    <button class="btn cyan mic" id="mic" type="button" aria-label="Říct odpověď nahlas" aria-pressed="false" title="Říct odpověď nahlas" data-t-aria="sayIt" data-t-title="sayIt" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/>
         <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>
       </svg>
     </button>
-    <button class="btn tip" type="submit" aria-label="Tipnout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span class="tip-t">Tipnout</span></button>
+    <button class="btn tip" type="submit" aria-label="Tipnout" data-t-aria="guessBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span class="tip-t" data-t="guessBtn">Tipnout</span></button>
   </form>
   <div class="actions" id="akce" hidden>
     <button class="btn" id="hlavni" type="button">Další</button>
@@ -652,13 +660,14 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
 <section class="home" id="home" aria-labelledby="home-title">
   <div class="hscroll">
     <div class="htop">
-      <button class="lbchip" id="lb-btn" type="button" aria-label="Žebříček" title="Žebříček" hidden><svg class="tro" viewBox="0 0 64 64" aria-hidden="true"><path d="M20 13H10a9 9 0 0 0 10 12M44 13h10a9 9 0 0 1-10 12" fill="none" stroke="#1B2A57" stroke-width="5" stroke-linecap="round"/><path class="cup" d="M18 7h28v14a14 14 0 0 1-28 0z" fill="#FFD45C" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><path class="cup" d="M27 35h10l1 8H26z" fill="#FFD45C" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><rect class="cup" x="17" y="43" width="30" height="11" rx="3" fill="#FFD45C" stroke="#1B2A57" stroke-width="3.5"/></svg><span class="lbt">Žebříček</span></button>
+      <button class="lbchip" id="lb-btn" type="button" aria-label="Žebříček" title="Žebříček" data-t-aria="leaderboard" data-t-title="leaderboard" hidden><svg class="tro" viewBox="0 0 64 64" aria-hidden="true"><path d="M20 13H10a9 9 0 0 0 10 12M44 13h10a9 9 0 0 1-10 12" fill="none" stroke="#1B2A57" stroke-width="5" stroke-linecap="round"/><path class="cup" d="M18 7h28v14a14 14 0 0 1-28 0z" fill="#FFD45C" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><path class="cup" d="M27 35h10l1 8H26z" fill="#FFD45C" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><rect class="cup" x="17" y="43" width="30" height="11" rx="3" fill="#FFD45C" stroke="#1B2A57" stroke-width="3.5"/></svg><span class="lbt" data-t="leaderboard">Žebříček</span></button>
       <div class="htop-r">
         <div class="rank" id="rank" hidden>
           <span class="rk-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.6l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z" fill="#fff" stroke="#1B2A57" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
-          <span class="rk-txt"><b id="rk-name">Nováček</b><small id="rk-sub">0 bodů</small><span class="xp" role="progressbar" aria-label="Postup k další hodnosti" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="rk-bar"><i id="rk-xp"></i></span></span>
+          <span class="rk-txt"><b id="rk-name">Nováček</b><small id="rk-sub">0 bodů</small><span class="xp" role="progressbar" aria-label="Postup k další hodnosti" data-t-aria="rankProgress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="rk-bar"><i id="rk-xp"></i></span></span>
         </div>
-        <button class="hbtn snd" id="zvuk2" type="button" aria-label="Zvuk" aria-pressed="true" title="Zvuk">
+        <div class="lang" role="group" aria-label="Jazyk · Language"><button type="button" data-lang="cs" lang="cs" title="Čeština" aria-pressed="true">CZ</button><button type="button" data-lang="en" lang="en" title="English" aria-pressed="false">EN</button></div>
+        <button class="hbtn snd" id="zvuk2" type="button" aria-label="Zvuk" aria-pressed="true" title="Zvuk" data-t-aria="sound">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
             <path class="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>
@@ -673,21 +682,21 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
         <svg class="doodle d1" viewBox="0 0 60 60" aria-hidden="true"><path d="M30 6l6 16 17 1-13 11 5 17-15-10-15 10 5-17L7 23l17-1z"/></svg>
         <svg class="doodle d2" viewBox="0 0 44 44" aria-hidden="true"><path d="M8 30c6-18 22-24 28-12s-10 18-16 10"/></svg>
         <div class="nb-title">
-          <h1 class="logo" id="home-title" aria-label="A víš proč?"><span class="hl">A víš</span><br>proč<span class="qm">?</span></h1>
-          <p class="sub">vtipné hádanky do lavice</p>
+          <h1 class="logo" id="home-title" aria-label="A víš proč?" data-t-aria="title" data-t-html="logo"><span class="hl">A víš</span><br>proč<span class="qm">?</span></h1>
+          <p class="sub" data-t="sub">vtipné hádanky do lavice</p>
         </div>
       </div>
       <div class="nb-row">
         <div class="nb-play">
-          <svg class="arrow" viewBox="0 0 120 80" aria-hidden="true"><text x="2" y="20">klikni!</text><path d="M14 30c10 30 50 40 92 30m-14-12l15 12-17 6"/></svg>
+          <svg class="arrow" viewBox="0 0 120 80" aria-hidden="true"><text x="2" y="20" data-t="clickMe">klikni!</text><path d="M14 30c10 30 50 40 92 30m-14-12l15 12-17 6"/></svg>
           <button class="btn big" id="hrat" type="button">Hrát</button>
           <p class="hstat" id="hstat"></p>
           <button class="hlink" id="znovu" type="button" hidden>Prohlédnout obrázky</button>
-          <button class="hlink" id="nove" type="button" hidden>Nové karty</button>
+          <button class="hlink" id="nove" type="button" data-t="newCards" hidden>Nové karty</button>
         </div>
         <div class="postits">
           <div class="postit qotd"><b id="qotd-t">Zkus uhodnout</b><p id="bublina" aria-live="polite"><span id="bublina-t">A víš proč má kečup červenou barvu?</span><i class="caret" aria-hidden="true"></i></p></div>
-          <div class="postit" id="pravidla"><b>Pravidla</b><ol><li>koukni na otázku</li><li>máš jen jeden tip</li><li>trefa = body ⭐</li></ol></div>
+          <div class="postit" id="pravidla"><b data-t="rules">Pravidla</b><ol><li data-t="rule1">koukni na otázku</li><li data-t="rule2">máš jen jeden tip</li><li data-t="rule3">trefa = body ⭐</li></ol></div>
         </div>
       </div>
     </div>
@@ -698,30 +707,30 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
 <section class="end" id="konec" hidden aria-labelledby="end-t">
   <div class="end-scroll">
     <div class="htop">
-      <button class="hbtn" id="end-domu" type="button" aria-label="Zpět na úvod" title="Zpět na úvod">
+      <button class="hbtn" id="end-domu" type="button" aria-label="Zpět na úvod" title="Zpět na úvod" data-t-aria="home" data-t-title="home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg>
       </button>
     </div>
     <div class="end-wrap" id="end-wrap">
       <div class="end-hero">
-          <p class="test-head">Písemka z hádanek</p>
+          <p class="test-head" data-t="quiz">Písemka z hádanek</p>
         <div class="grade" id="znamka" role="img" aria-label="Známka"><span id="znamka-n">1</span><small id="znamka-t">výborně</small></div>
         <h2 class="end-t" id="end-t">Hotovo!</h2>
-        <p class="end-score"><b id="res-body">0</b> bodů</p>
+        <p class="end-score"><b id="res-body">0</b> <span data-t="points">bodů</span></p>
         <p class="end-praise" id="res-m"></p>
         <ul class="end-stats" id="end-stats"></ul>
       </div>
       <div class="end-lb" id="end-lb" hidden>
-        <div class="end-lb-top"><h3>Žebříček</h3><span class="lb-live"><i></i>živě</span></div>
+        <div class="end-lb-top"><h3 data-t="leaderboard">Žebříček</h3><span class="lb-live"><i></i><span data-t="live">živě</span></span></div>
         <ol class="lb-list" id="end-list"></ol>
         <p class="sv-msg" id="sv-msg" hidden></p>
         <p class="sv-note" id="sv-note"></p>
-        <button class="btn cyan sm" id="end-lb-btn" type="button" hidden><svg class="tro" viewBox="0 0 64 64" aria-hidden="true"><path d="M20 13H10a9 9 0 0 0 10 12M44 13h10a9 9 0 0 1-10 12" fill="none" stroke="#1B2A57" stroke-width="5" stroke-linecap="round"/><path class="cup" d="M18 7h28v14a14 14 0 0 1-28 0z" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><path class="cup" d="M27 35h10l1 8H26z" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><rect class="cup" x="17" y="43" width="30" height="11" rx="3" stroke="#1B2A57" stroke-width="3.5"/></svg> Celý žebříček</button>
+        <button class="btn cyan sm" id="end-lb-btn" type="button" hidden><svg class="tro" viewBox="0 0 64 64" aria-hidden="true"><path d="M20 13H10a9 9 0 0 0 10 12M44 13h10a9 9 0 0 1-10 12" fill="none" stroke="#1B2A57" stroke-width="5" stroke-linecap="round"/><path class="cup" d="M18 7h28v14a14 14 0 0 1-28 0z" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><path class="cup" d="M27 35h10l1 8H26z" stroke="#1B2A57" stroke-width="3.5" stroke-linejoin="round"/><rect class="cup" x="17" y="43" width="30" height="11" rx="3" stroke="#1B2A57" stroke-width="3.5"/></svg> <span data-t="fullLb">Celý žebříček</span></button>
       </div>
       <div class="end-btns">
-        <p class="end-ask">Co dál?</p>
-        <div class="end-choice"><button class="btn big" id="end-znovu" type="button">Hrát znovu</button><small>stejné karty</small></div>
-        <div class="end-choice" id="end-nove-box"><button class="btn big pink" id="end-nove" type="button">Nové karty</button><small>jiná sada hádanek</small></div>
+        <p class="end-ask" data-t="whatNext">Co dál?</p>
+        <div class="end-choice"><button class="btn big" id="end-znovu" type="button" data-t="playAgain">Hrát znovu</button><small data-t="sameCards">stejné karty</small></div>
+        <div class="end-choice" id="end-nove-box"><button class="btn big pink" id="end-nove" type="button" data-t="newCards">Nové karty</button><small data-t="newSet">jiná sada hádanek</small></div>
         
       </div>
     </div>
@@ -732,13 +741,13 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
 <div class="sheet" id="prehled" hidden role="dialog" aria-modal="true" aria-labelledby="prehled-t">
   <div class="sheet-box">
     <div class="sheet-top">
-      <h2 id="prehled-t">Hádanky</h2>
-      <button class="hbtn" id="prehled-x" type="button" aria-label="Zavřít" title="Zavřít">
+      <h2 id="prehled-t" data-t="riddlesTitle">Hádanky</h2>
+      <button class="hbtn" id="prehled-x" type="button" aria-label="Zavřít" title="Zavřít" data-t-aria="close" data-t-title="close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
       </button>
     </div>
     <div class="sheet-grid" id="prehled-grid"></div>
-    <p class="sheet-legend"><span><i style="background:var(--lime)"></i>uhodnuto</span><span><i style="background:var(--red)"></i>vedle</span><span><i style="background:var(--sun)"></i>právě hraješ</span><span><i style="background:#fff"></i>ještě nehráno</span></p>
+    <p class="sheet-legend"><span><i style="background:var(--lime)"></i><span data-t="solvedL">uhodnuto</span></span><span><i style="background:var(--red)"></i><span data-t="missedL">vedle</span></span><span><i style="background:var(--sun)"></i><span data-t="playingL">právě hraješ</span></span><span><i style="background:#fff"></i><span data-t="notPlayedL">ještě nehráno</span></span></p>
   </div>
 </div>
 
@@ -746,18 +755,18 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   <div class="lb-scroll">
     <div class="lb-wrap">
       <div class="lb-top">
-        <button class="hbtn" id="lb-zpet" type="button" aria-label="Zpět" title="Zpět">
+        <button class="hbtn" id="lb-zpet" type="button" aria-label="Zpět" title="Zpět" data-t-aria="back" data-t-title="back">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
         </button>
-        <h2 class="lb-title" id="lb-title">Žebříček</h2>
+        <h2 class="lb-title" id="lb-title" data-t="leaderboard">Žebříček</h2>
         <span></span>
       </div>
-      <span class="lb-live"><i></i>Živě · obnovuje se samo</span>
+      <span class="lb-live"><i></i><span data-t="liveAuto">Živě · obnovuje se samo</span></span>
       <div class="podium" id="podium"></div>
       <ol class="lb-list" id="lb-list"></ol>
-      <p class="lb-stav" id="lb-stav" aria-live="polite">Načítám…</p>
+      <p class="lb-stav" id="lb-stav" aria-live="polite" data-t="loading">Načítám…</p>
       <div class="lb-admin" id="lb-admin" hidden>
-        <label for="lb-heslo">Heslo správce (pro mazání záznamů)</label>
+        <label for="lb-heslo" data-t="adminPw">Heslo správce (pro mazání záznamů)</label>
         <input id="lb-heslo" type="password" autocomplete="current-password">
       </div>
       <footer class="credit">Design and Concept by <b>Lea Kantorová</b> © 2026</footer>
@@ -778,12 +787,17 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   // klic = answer key. A guess is right when every group has at least one match
   // (lowercase, no diacritics; a leading space means "start of a word").
   // skoro = words that make a wrong guess "close"; vazne = sensible real-world answers.
-  const POOL = [
+  const HADANKY = [
     {
       id: 'kecup', src: 'obrazky/kecup.webp', w: 1536, h: 1024, split: [761, 773],
       otazka: 'Víš proč má kečup červenou barvu?', odpoved: 'Protože oranžová došla.',
       klic: [['oranz'], ['dosl', 'dosel', 'dojd', 'nebyl', 'neni', 'chyb', 'nemel', 'nemaj', 'vyprod', 'spotreb', 'minul', 'zadn', 'nezbyl']],
       vazne: ['rajc', 'rajsk', 'paradajk', 'tomat'],
+      en: {   // English: the picture goes to obrazky/en/kecup.webp, then add src and split here
+        otazka: "Do you know why ketchup is red?", odpoved: "Because they ran out of orange.",
+        klic: [["orange"], ["ran out", "run out", "runs out", "out of", "none left", "no more", "sold out", "used up", "all gone", " gone", "finished", "empty", "missing", "didn t have", "did not have", "didnt have", "had no", "have no", "there was no", "there wasn t", "no orange"]],
+        vazne: ["tomat"]
+      },
       emoji: ['🍅', '🍟', '😂', '🧡', '🍅', '🤯']
     },
     {
@@ -792,6 +806,12 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       klic: [['konecn', 'konec', 'konc', 'dojel', 'dojede', 'dorazi', 'cil', 'na mist']],
       skoro: ['pomal', 'nastoup', 'nestih', 'odjed', 'ujede', 'trva', 'dlouh'],
       vazne: ['penez', 'listek', 'jizdenk', 'ulit', 'domecek', 'nema nohy', 'nema ruce'],
+      en: {   // English: the picture goes to obrazky/en/snek.webp, then add src and split here
+        otazka: "Do you know why snails don't take the bus?", odpoved: "Because by the time they get on, it's already at the last stop.",
+        klic: [["last stop", "final stop", "end of the line", "end of the route", "terminal", "terminus", "the end", "already there", "already arrived", "already at", "arrive", "destination"]],
+        skoro: ["slow", "get on", "getting on", "too long", "forever", " miss", "leave", "left without", " late"],
+        vazne: ["money", "ticket", "shell", "no legs", "no hands", "house", " pay"]
+      },
       emoji: ['🐌', '🚌', '😂', '🏁', '🐌', '🤯']
     },
     {
@@ -799,6 +819,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       otazka: 'Víš proč žirafa má dlouhý krk?', odpoved: 'Protože má malé tělo.',
       klic: [[' mal', ' mrnav', ' krat', ' drobn', ' prck', ' mini', ' tenk'], [' tel', ' trup', ' bris', ' bruch']],
       vazne: ['list', 'strom', 'vysok', 'dosah', 'dosta', 'jidl', 'potrav', 'evoluc', 'vetv', 'korun'],
+      en: {   // English: the picture goes to obrazky/en/zirafa.webp, then add src and split here
+        otazka: "Do you know why giraffes have long necks?", odpoved: "Because their bodies are too small.",
+        klic: [[" small", " tiny", " little", " short", " mini", " skinny", " thin", " wee"], [" body", " bodies", " torso", " tummy", " belly"]],
+        vazne: ["leaves", "leaf", "tree", " tall", "reach", "food", " eat", "evolution", "branch", " high", " top"]
+      },
       emoji: ['🦒', '🌿', '😂', '☀️', '🦒', '🤯']
     },
     {
@@ -806,6 +831,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       otazka: 'Víš proč pravítko nikdy nelže?', odpoved: 'Protože má všechno přesně změřené.',
       klic: [['mer', 'cm', 'centimetr', 'milimetr', 'presn', 'rovn', 'primy', 'prime']],
       vazne: ['drev', 'plast', 'nemluv', 'neumi mluvit', 'nema pusu', 'vec', 'predmet'],
+      en: {   // English: the picture goes to obrazky/en/pravitko.webp, then add src and split here
+        otazka: "Do you know why a ruler never lies?", odpoved: "Because it's always straight with you.",
+        klic: [["straight", "measur", "exact", "precise", "accurate", "centimet", " inch", "millimet", " cm ", " mm ", " line", "level"]],
+        vazne: ["wood", "plastic", "can t talk", "cant talk", "cannot talk", "can t speak", "no mouth", "object", " thing", "not alive"]
+      },
       emoji: ['📏', '📐', '😎', '✨', '📏', '🤓']
     },
     {
@@ -814,6 +844,12 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       klic: [['pisn', 'pisen', 'hudb', 'muzik', 'music', 'radi', 'tanc', 'zpiv', 'reprak', 'repro', 'beden', 'disk', 'sluchatk', 'koncert', ' rock', ' rap ', 'gramofon', 'hifi']],
       skoro: ['nahlas', 'hlasit', 'hluk', 'rachot', 'kraval', 'rambajz', 'naplno', 'na plno'],
       vazne: ['star', 'hluch', 'naslouch', ' vek', ' sluch', 'nedoslych', 'ucho', ' usi'],
+      en: {   // English: the picture goes to obrazky/en/babicka.webp, then add src and split here
+        otazka: "Do you know why Grandma can't hear you?", odpoved: "Because she's blasting her favourite song.",
+        klic: [["music", "song", "radio", "danc", " sing", "speaker", "headphone", "earphone", "earbud", "concert", " rock", " rap ", "record", "playlist", " tune", "disco", "party"]],
+        skoro: ["loud", "noise", "noisy", "volume", "blast", "full power"],
+        vazne: [" old", "deaf", "hearing aid", " age", " ears", " ear ", "hard of hearing"]
+      },
       emoji: ['🎵', '🎶', '🔊', '👵', '💃', '🎧']
     },
     {
@@ -822,6 +858,12 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       klic: [['maz', 'utir', 'umyv', 'umyt', 'drhn', 'drhl', 'cistit', 'vycist']],
       skoro: ['krid', 'spinav', 'prach', 'bol', 'drs'],
       vazne: ['mokr', 'voda', 'nasak', 'velk'],
+      en: {   // English: the picture goes to obrazky/en/houba.webp, then add src and split here
+        otazka: "Do you know why the sponge is scared of the blackboard?", odpoved: "Because it's sick of cleaning up after it.",
+        klic: [["wipe", "clean", "erase", " rub", "scrub", " wash", " mess", " tidy"]],
+        skoro: ["chalk", "dirty", "dust", "hurt", "rough", "scratch"],
+        vazne: [" wet", "water", "soak", " big"]
+      },
       emoji: ['🧽', '😱', '💦', '🧽', '😂', '✨']
     },
     {
@@ -829,6 +871,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       otazka: 'Víš proč je tužka plešatá?', odpoved: 'Protože štětec má vlasy.',
       klic: [[' stet'], ['vlas', 'chlup', 'chloup', 'paruk', 'ofin', 'kader', 'ucesn']],
       vazne: ['orez', 'strouh', 'drev', 'tuh', ' gum', ' hlav', 'pise', 'kresl', ' tup'],
+      en: {   // English: the picture goes to obrazky/en/tuzka.webp, then add src and split here
+        otazka: "Do you know why the pencil is bald?", odpoved: "Because the paintbrush got all the hair.",
+        klic: [["brush"], ["hair", " fur", "bristle", " wig", "fringe", "curl"]],
+        vazne: ["sharpen", "wood", " lead", "graphite", "rubber", "eraser", " head", "write", " draw", "blunt"]
+      },
       emoji: ['✏️', '🖌️', '💇', '😂', '🎨', '🤯']
     },
     {
@@ -836,6 +883,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       otazka: 'Víš proč jsou ve škole přestávky?', odpoved: 'Protože i židle si potřebují odpočinout od zadků.',
       klic: [['zidl', 'lavic', 'sedadl', 'stolick'], ['odpoc', 'pauz', 'oddech', 'volno', 'vydech', 'zadk', 'zadek', 'zadeck', 'prdel', 'unav', 'boli']],
       vazne: ['jidl', 'najed', 'svacin', 'zachod', 'wc', 'hra', 'hrat', 'ucitel', 'mozek'],
+      en: {   // English: the picture goes to obrazky/en/prestavky.webp, then add src and split here
+        otazka: "Do you know why school has breaks?", odpoved: "Because even the chairs need a rest from all the bottoms.",
+        klic: [["chair", " seat", "bench", "stool", " desk"], [" rest", "break", "pause", "relax", "breath", "bottom", " bum", " butt", "behind", "tired", "hurt", " sore", "sit on", "sitting"]],
+        vazne: [" eat", "food", "snack", "lunch", "toilet", " loo", "bathroom", " play", "teacher", "brain"]
+      },
       emoji: ['🪑', '😎', '🔔', '😂', '🪑', '🥤']
     },
     {
@@ -843,6 +895,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       otazka: 'Víš proč Lea chodí do 5. třídy?', odpoved: 'Protože 6. byla plná.',
       klic: [['6', ' sest', ' vyss'], ['pln', 'narvan', 'nacpan', 'obsazen', ' mist', 'vejd', 'vesl', 'natrisk', 'zadn']],
       vazne: [' let ', ' rok', ' vek', 'narozen', 'mlad', 'chytr', 'propad', 'znamk', 'vysvedc', ' uci'],
+      en: {   // English: the picture goes to obrazky/en/lea.webp, then add src and split here
+        otazka: "Do you know why Lea is in 5th grade?", odpoved: "Because 6th grade was full.",
+        klic: [["6", " six", "higher", " next"], [" full", "packed", "crowded", "no room", "no space", "no seat", " taken", "occupied", "no place", " fit", "squeez"]],
+        vazne: [" age", " old", " year", " born", "young", "smart", "clever", "fail", "grades", "marks", "report", "learn"]
+      },
       emoji: ['🎒', '📚', '✏️', '😂', '🏫', '🤯']
     },
     {
@@ -850,6 +907,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       otazka: 'Víš proč mají ve školní jídelně velké hrnce?', odpoved: 'Protože do malých by se kuchařka nevešla.',
       klic: [['kuchar', 'kuchyn'], ['vesl', 'vejd', 'vlez', 'neves', 'nevejd', ' mist', 'velk', 'tlust', 'sedi', 'koupe', 'plav', 'schova']],
       vazne: ['hodne', 'deti', 'detem', 'zaku', 'zaci', 'jidla', 'jidlo', 'porc', 'lidi', 'vsechn'],
+      en: {   // English: the picture goes to obrazky/en/hrnce.webp, then add src and split here
+        otazka: "Do you know why the school canteen has such big pots?", odpoved: "Because the cook wouldn't fit in small ones.",
+        klic: [[" cook", " chef", "kitchen", "dinner lady", "lunch lady"], [" fit", "squeez", " room", "space", " big", " fat", " sit", " bath", " swim", " hide", "inside", " in it", " get in", "climb"]],
+        vazne: ["lot of", "lots of", " many", " kids", "children", "student", "pupil", "food", "portion", "people", "everyone", "everybody"]
+      },
       emoji: ['🍲', '👩‍🍳', '😂', '🥄', '🍲', '🤯']
     },
     {
@@ -857,6 +919,11 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       otazka: 'Víš proč jsou v bytě dveře?', odpoved: 'Protože klikám bylo smutno.',
       klic: [['klik'], ['smut', 'samot', 'osam', ' sam', 'brec', 'plak', 'nudil', 'nudn', 'kamarad', 'domov', 'spolec', 'opust', 'stesk', 'stysk']],
       vazne: ['vchaz', 'vstup', 'chod', 'soukrom', ' zim', 'zavir', 'zamyk', 'zamk', 'bezpec', 'zlod', 'tepl', 'hluk', 'oddel', 'mistnost', 'pokoj', 'projit', 'prujchod'],
+      en: {   // English: the picture goes to obrazky/en/dvere.webp, then add src and split here
+        otazka: "Do you know why flats have doors?", odpoved: "Because the door handles were lonely.",
+        klic: [["handle", "knob"], ["lonely", " sad", "alone", "bored", "friend", "company", " cry", " miss", "lonesome", "unhappy"]],
+        vazne: ["entrance", " enter", "way in", "way out", "go in", " walk", "privacy", "private", " cold", "close", "lock", " safe", "security", "thief", "thieves", "burglar", " warm", "noise", "separate", " room"]
+      },
       emoji: ['🚪', '🔑', '😢', '😂', '🏠', '🤯']
     },
     {
@@ -865,6 +932,12 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       klic: [['skak', 'skac', 'skoc', 'skok', ' hop']],
       skoro: [' dvou', ' dve ', ' dva ', 'chod', 'beh', 'utik', 'utek', 'tanc', 'kulh', 'balet'],
       vazne: ['pad', 'stabil', 'rovnovah', 'balanc', 'prevrh', 'prevrat', 'stoj', 'stal', 'pevn', 'drz', 'unes', 'vah', 'tez', 'sed'],
+      en: {   // English: the picture goes to obrazky/en/zidle.webp, then add src and split here
+        otazka: "Do you know why a chair has four legs?", odpoved: "Because on two it would have to hop.",
+        klic: [[" hop", "jump", "bounc", " skip", " leap", "pogo"]],
+        skoro: [" two", " 2 ", " walk", " run", "danc", " limp", "ballet"],
+        vazne: ["fall", "stable", "balance", "tip over", "topple", " stand", "steady", "strong", " hold", "weight", "heavy", " sit", "wobbl"]
+      },
       emoji: ['🪑', '🦘', '😂', '🤸', '💥', '🏫']
     },
     {
@@ -873,6 +946,12 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       klic: [['oris', 'orech', 'zasob', 'zalud', ' lisk']],
       skoro: ['jidl', 'zrad', 'hlad', 'semin', 'sisk', 'schov', 'sber', 'sbir', ' zim'],
       vazne: ['strom', 'splh', 'lezt', 'leze', ' umi', 'sikovn', 'drap', 'sport', 'trenin', 'kondic', 'sval', 'sil', 'posil', 'bav', 'zdrav', 'skal', 'hory', 'vylez'],
+      en: {   // English: the picture goes to obrazky/en/veverka.webp, then add src and split here
+        otazka: "Do you know why squirrels go climbing?", odpoved: "Because they love stocking up on nuts.",
+        klic: [[" nut", "walnut", "peanut", "hazelnut", "chestnut", "acorn", " stock", " stash", " store", "hoard", "supplies"]],
+        skoro: ["food", " eat", "hungry", " seed", " cone", " hide", "collect", "gather", "winter"],
+        vazne: ["tree", "climb", "good at", "skill", " claw", "sport", "training", " fit", "muscle", "strong", " fun", "enjoy", "health", " rock", "mountain", "like it", "love it"]
+      },
       emoji: ['🐿️', '🌰', '🧗', '😂', '🥜', '🌲']
     },
     {
@@ -883,42 +962,151 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       skoro: ['ztrat', 'ztrac', 'zapom', 'nepamat', 'plet', 'popl', 'zmat', 'hled'],
       vazne: ['dver', 'zamyk', 'zamk', 'odemy', 'odemk', 'mistnost', 'trid', 'skrin', 'sklep', 'telocvic', 'jideln', 'kabinet',
         'star', 'prac', 'oprav', 'hlid', 'bezpec', 'zodpov', 'vsech', 'kazd', 'budov', 'hodne', 'zlod'],
+      en: {   // English: the picture goes to obrazky/en/skolnik.webp, then add src and split here
+        otazka: "Do you know why the caretaker has so many keys?", odpoved: "Because he keeps getting lost.",
+        klic: [["gets lost", "get lost", "getting lost", "got lost", "is lost", " s lost", "goes missing", "lose his way", "loses his way", "lost his way", "wander", " maze", "labyrinth", "way out", "way back", "his way", "can t find", "cant find", "cannot find", "doesn t know where", "doesnt know where", "where he is", " map", "directions"]],
+        skoro: ["lost", " lose", "forget", "forgot", "mix up", "mixes up", "mixed up", "confus", "search", "looking for", "muddl"],
+        vazne: ["door", "lock", "unlock", " open", " room", "class", "cupboard", "basement", " gym", "cafeteria", "canteen", "office", " old", " job", " work", " fix", "repair", "guard", " safe", "security", "responsib", "every", "all the", "building", "lots of", "thief", "thieves"]
+      },
       emoji: ['🔑', '🗝️', '🏫', '🤔', '😂', '🗺️']
     }
   ];
+  /* ---------- language ---------- */
+  // Czech or English, remembered on this device; a link with ?lang=en or ?lang=cs sets it too.
+  // English mode plays only the riddles that already have an English picture (en.src).
+  const LANG = (() => {
+    let l = new URLSearchParams(location.search).get('lang');
+    try {
+      if (l === 'cs' || l === 'en') localStorage.setItem('vp-jazyk', l);
+      else l = localStorage.getItem('vp-jazyk');
+    } catch (e) {}
+    if (l === 'cs' || l === 'en') return l;
+    const hasEn = HADANKY.some(p => p.en && p.en.src);
+    return hasEn && !/^(cs|sk)\b/i.test(navigator.language || '') ? 'en' : 'cs';
+  })();
+  const POOL = LANG === 'cs' ? HADANKY : HADANKY.filter(p => p.en && p.en.src).map(p => ({ ...p, ...p.en }));
+  const KEY = k => (LANG === 'cs' ? k : k + '-en');   // each language keeps its own game in progress
+  const ord = n => n + (['st', 'nd', 'rd'][((n + 90) % 100 - 10) % 10 - 1] || 'th');
+  const TXT = {
+    cs: {
+      title: 'A víš proč?', logo: '<span class="hl">A víš</span><br>proč<span class="qm">?</span>', sub: 'vtipné hádanky do lavice',
+      lang: 'Jazyk', home: 'Zpět na úvod', overview: 'Přehled hádanek', sound: 'Zvuk', soundOn: 'Zvuk je zapnutý', soundOff: 'Zvuk je vypnutý',
+      question: 'Otázka', answer: 'Odpověď', openDoors: 'Otevřít dvířka a ukázat odpověď', because: 'Protože…',
+      guessFirst: 'nejdřív tipni', tapToOpen: 'klikni a otevři', yourAnswer: 'Tvoje odpověď', sayIt: 'Říct odpověď nahlas',
+      guessBtn: 'Tipnout', next: 'Další', results: 'Výsledky', leaderboard: 'Žebříček', rankProgress: 'Postup k další hodnosti',
+      clickMe: 'klikni!', play: 'Hrát', cont: 'Pokračovat', playAgain: 'Hrát znovu', myResults: 'Moje výsledky', newCards: 'Nové karty',
+      tryToGuess: 'Zkus uhodnout', bravo: 'Bravo!', rules: 'Pravidla', rule1: 'koukni na otázku', rule2: 'máš jen jeden tip', rule3: 'trefa = body ⭐',
+      quiz: 'Písemka z hádanek', done: 'Hotovo!', legend: 'Legenda!', points: 'bodů', live: 'živě', fullLb: 'Celý žebříček',
+      whatNext: 'Co dál?', sameCards: 'stejné karty', newSet: 'jiná sada hádanek', riddlesTitle: 'Hádanky', close: 'Zavřít',
+      solvedL: 'uhodnuto', missedL: 'vedle', playingL: 'právě hraješ', notPlayedL: 'ještě nehráno', back: 'Zpět',
+      liveAuto: 'Živě · obnovuje se samo', loading: 'Načítám…', adminPw: 'Heslo správce (pro mazání záznamů)',
+      scoreAria: (b, s) => `Body: ${b}` + (s >= 2 ? `, série ${s}` : ''),
+      progAria: (k, n) => `Hádanka ${k} z ${n}. Otevřít přehled hádanek.`,
+      tileHidden: k => `Hádanka ${k}: ještě nehraná`,
+      tile: (k, q, st) => `Hádanka ${k}: ${q || 'vlastní obrázek'}${st === 'solved' ? ' (uhodnuto)' : st ? ' (vedle)' : ''}`,
+      answerAria: a => (a ? `Odpověď: ${a}` : 'Odpověď je odkrytá'), lockedAria: 'Dvířka jsou zamčená. Nejdřív napiš svůj tip.',
+      srOpen: a => (a ? `Odpověď: ${a}` : 'Dvířka jsou otevřená.'), srClosed: 'Dvířka jsou zavřená.',
+      correctHint: n => `Správně! +${n} bodů.`, win: 'Správně!', winSub: (n, s) => (s >= 2 ? `+${n} · 🔥 ${s}× série` : `+${n}`),
+      bClose: 'Skoro!', bMiss: 'Vedle!', go: 'Jedem!',
+      rankSub: (b, nx, d) => (nx ? `${b} bodů · ${nx} za ${d}` : `${b} bodů · nejvyšší hodnost`),
+      allRight: (n, b) => `Wow! Všech ${n} správně. Máš ${b} bodů!`, doneSay: b => `Hotovo! Máš ${b} bodů. Zapiš se do žebříčku!`,
+      statDone: (b, ok, n) => `Máš ${b} bodů · uhodnuto ${ok} z ${n}`, statProgress: (d, n) => `Hotovo ${d} z ${n}`,
+      statFresh: (n, max) => `${n} hádanek · až ${max} bodů`,
+      riddleLine: q => 'A ' + q.charAt(0).toLowerCase() + q.slice(1),
+      soonTitle: 'Už brzy', soon: 'Hádanky se chystají.', soonStat: 'Hádanky se chystají',
+      grades: ['výborně', 'chvalitebně', 'dobře', 'dostatečně', 'zkus znovu'], marks: ['1', '2', '3', '4', '5'],
+      gradeAria: (g, name) => `Známka ${g}, ${name}`,
+      praise: ['Všechno správně. Klobouk dolů!', 'Skvělá práce!', 'Dobrý začátek!', 'Tyhle byly fakt záludné.'],
+      stats: ['uhodnuto', 'nejdelší série', 'hodnost'], statOf: (a, b) => `${a} z ${b}`,
+      lbLoading: 'Načítám žebříček…', lbError: 'Žebříček teď nejde načíst. Zkus to za chvíli.',
+      nick: 'Tvoje přezdívka', save: 'Uložit', you: 'TY',
+      noteSaved: (r, n) => `Jsi v žebříčku na ${r}. místě. Hráčů celkem: ${n}.`, noteRank: r => `S tímhle skóre jsi na ${r}. místě! `,
+      noteEmpty: 'Zatím tu nikdo není. Buď první! ', noteSign: 'Napiš přezdívku a zapiš se. Uloží se jen přezdívka a body.',
+      noteReplay: b => ` Počítá se tvoje první hra (${b} bodů).`,
+      nickRule: 'Přezdívka musí mít 2–16 znaků: písmena, čísla, mezera, tečka nebo pomlčka.',
+      placeWin: n => `${n}. místo!`, savedWin: 'Zapsáno!', podiumSub: '🏆 Jsi na stupních vítězů', placeOf: (n, c) => `${n}. místo z ${c}`,
+      nickBad: 'Tahle přezdívka nejde. Zkus jinou, bez sprostých slov.', tooMany: 'Moc pokusů najednou. Zkus to za chvíli.',
+      saveFail: 'Uložení se nepovedlo. Zkus to znovu.', lbDown: 'Žebříček teď nejde. Zkus to za chvíli.',
+      free: 'Volno', pts: b => `${b} b`, players: n => `Hráčů v žebříčku: ${n}`, lbEmpty: 'Zatím tu nikdo není. Dohraj hru a buď první!',
+      del: 'Smazat', sure: 'Opravdu?', deleted: n => `Smazáno: ${n}`, badPw: 'Špatné heslo správce, nebo chybí soubor api/spravce-heslo.php.',
+      delFail: 'Smazání se nepovedlo.', speech: 'cs-CZ',
+      ranks: ['Nováček', 'Vtipálek', 'Hádankář', 'Mistr vtipů', 'Legenda'],
+      serious: 'To je pravda, ale hledáme vtipnější důvod.',
+      quips: ['Trefa, nebo vedle?', 'Kdo to věděl, zvedněte ruku!', 'Teď už to víš taky.', 'Zkus to na kamarády a sleduj jejich obličej.', 'Tohle ti ve škole neřeknou.'],
+      // One guess per picture. The doors stay locked until it is used.
+      hints: {
+        ask: 'Máš jeden tip. Napiš ho, nebo ho řekni.', empty: 'Nejdřív napiš svůj tip.', locked: 'Dvířka se otevřou až po tvém tipu.',
+        solved: 'Tuhle už máš vyřešenou.', missed: 'Tip už padl.', revealed: 'Odpověď už znáš, body za ni nebudou.',
+        custom: 'U vlastních obrázků se body nepočítají. Klikni na dvířka.', listen: 'Poslouchám… řekni svou odpověď.',
+        heard: 'Sedí to? Zmáčkni Tipnout.', noMic: 'Mikrofon tady nejde. Zkus diktování na klávesnici.', noSpeech: 'Nic není slyšet. Zkus to znovu.'
+      }
+    },
+    en: {
+      title: 'Do You Know Why?', logo: '<span class="hl">Do you</span><br>know why<span class="qm">?</span>', sub: 'funny riddles for the classroom',
+      lang: 'Language', home: 'Back to start', overview: 'All riddles', sound: 'Sound', soundOn: 'Sound is on', soundOff: 'Sound is off',
+      question: 'Question', answer: 'Answer', openDoors: 'Open the doors and show the answer', because: 'Because…',
+      guessFirst: 'guess first', tapToOpen: 'tap to open', yourAnswer: 'Your answer', sayIt: 'Say your answer out loud',
+      guessBtn: 'Guess', next: 'Next', results: 'Results', leaderboard: 'Leaderboard', rankProgress: 'Progress to the next rank',
+      clickMe: 'click!', play: 'Play', cont: 'Continue', playAgain: 'Play again', myResults: 'My results', newCards: 'New cards',
+      tryToGuess: 'Try to guess', bravo: 'Bravo!', rules: 'Rules', rule1: 'look at the question', rule2: 'you get one guess', rule3: 'right = points ⭐',
+      quiz: 'Riddle quiz', done: 'Done!', legend: 'Legend!', points: 'points', live: 'live', fullLb: 'Full leaderboard',
+      whatNext: 'What next?', sameCards: 'same cards', newSet: 'a new set of riddles', riddlesTitle: 'Riddles', close: 'Close',
+      solvedL: 'solved', missedL: 'missed', playingL: 'playing now', notPlayedL: 'not played yet', back: 'Back',
+      liveAuto: 'Live · updates by itself', loading: 'Loading…', adminPw: 'Admin password (for deleting entries)',
+      scoreAria: (b, s) => `Points: ${b}` + (s >= 2 ? `, streak ${s}` : ''),
+      progAria: (k, n) => `Riddle ${k} of ${n}. Open the riddle overview.`,
+      tileHidden: k => `Riddle ${k}: not played yet`,
+      tile: (k, q, st) => `Riddle ${k}: ${q || 'own picture'}${st === 'solved' ? ' (solved)' : st ? ' (missed)' : ''}`,
+      answerAria: a => (a ? `Answer: ${a}` : 'The answer is shown'), lockedAria: 'The doors are locked. Type your guess first.',
+      srOpen: a => (a ? `Answer: ${a}` : 'The doors are open.'), srClosed: 'The doors are closed.',
+      correctHint: n => `Correct! +${n} points.`, win: 'Correct!', winSub: (n, s) => (s >= 2 ? `+${n} · 🔥 ${s}× streak` : `+${n}`),
+      bClose: 'Close!', bMiss: 'Nope!', go: 'Go!',
+      rankSub: (b, nx, d) => (nx ? `${b} points · ${nx} in ${d}` : `${b} points · top rank`),
+      allRight: (n, b) => `Wow! All ${n} right. You have ${b} points!`, doneSay: b => `Done! You have ${b} points. Put your name on the leaderboard!`,
+      statDone: (b, ok, n) => `${b} points · solved ${ok} of ${n}`, statProgress: (d, n) => `Done ${d} of ${n}`,
+      statFresh: (n, max) => `${n} riddles · up to ${max} points`,
+      riddleLine: q => q,
+      soonTitle: 'Coming soon', soon: 'The English riddles are on their way. Switch to CZ to play now!', soonStat: 'English riddles coming soon',
+      grades: ['excellent', 'very good', 'good', 'okay', 'try again'], marks: ['A', 'B', 'C', 'D', 'F'],
+      gradeAria: (g, name) => `Grade ${g}, ${name}`,
+      praise: ['All correct. Hats off!', 'Great job!', 'Good start!', 'These were really tricky.'],
+      stats: ['solved', 'longest streak', 'rank'], statOf: (a, b) => `${a} of ${b}`,
+      lbLoading: 'Loading the leaderboard…', lbError: "Can't load the leaderboard right now. Try again in a moment.",
+      nick: 'Your nickname', save: 'Save', you: 'YOU',
+      noteSaved: (r, n) => `You're number ${r} on the leaderboard. Players: ${n}.`, noteRank: r => `With this score you're number ${r}! `,
+      noteEmpty: 'Nobody here yet. Be the first! ', noteSign: 'Type a nickname to join. Only the nickname and points are saved.',
+      noteReplay: b => ` Your first game counts (${b} points).`,
+      nickRule: 'A nickname needs 2–16 characters: letters, numbers, space, dot or dash.',
+      placeWin: n => `${ord(n)} place!`, savedWin: 'Saved!', podiumSub: "🏆 You're on the podium", placeOf: (n, c) => `${ord(n)} of ${c}`,
+      nickBad: "That nickname isn't allowed. Try another one, no rude words.", tooMany: 'Too many tries at once. Try again in a moment.',
+      saveFail: "Couldn't save. Try again.", lbDown: "The leaderboard isn't working right now. Try again in a moment.",
+      free: 'Free', pts: b => `${b} pts`, players: n => `Players on the leaderboard: ${n}`, lbEmpty: 'Nobody here yet. Finish a game and be the first!',
+      del: 'Delete', sure: 'Sure?', deleted: n => `Deleted: ${n}`, badPw: 'Wrong admin password, or api/spravce-heslo.php is missing.',
+      delFail: "Couldn't delete.", speech: 'en-GB',
+      ranks: ['Rookie', 'Joker', 'Riddler', 'Joke Master', 'Legend'],
+      serious: "That's true, but we're looking for a funnier reason.",
+      quips: ['Hit or miss?', 'Who knew that? Hands up!', 'Now you know too.', 'Try it on your friends and watch their faces.', "They don't teach you this at school."],
+      hints: {
+        ask: 'You get one guess. Type it or say it.', empty: 'Type your guess first.', locked: 'The doors open only after your guess.',
+        solved: 'You already solved this one.', missed: 'Your guess is used up.', revealed: 'You already know the answer, no points for it.',
+        custom: 'No points for your own pictures. Tap the doors.', listen: "I'm listening… say your answer.",
+        heard: 'Is that right? Press Guess.', noMic: "The microphone doesn't work here. Try your keyboard's dictation.", noSpeech: "Couldn't hear anything. Try again."
+      }
+    }
+  };
+  function tr(k, ...a) { const v = TXT[LANG][k] ?? TXT.cs[k]; return typeof v === 'function' ? v(...a) : v; }
+
   // One game is a set of at most ten riddles from the pool. "Nové karty" deals the riddles that were played
   // longest ago (or never) first, so once the pool has twice as many, the next set has no repeats.
   const SADA = 10;
   const DECK = [];
   const BODY_ZA_TIP = 10, BONUS_SERIE = 5;
-  const RANKY = [
-    { min: 0, name: 'Nováček' }, { min: 30, name: 'Vtipálek' }, { min: 60, name: 'Hádankář' },
-    { min: 100, name: 'Mistr vtipů' }, { min: 140, name: 'Legenda' }
-  ];
-  const VAZNE = 'To je pravda, ale hledáme vtipnější důvod.';
+  const RANKY = [0, 30, 60, 100, 140].map((min, k) => ({ min, name: tr('ranks')[k] }));
+  const VAZNE = tr('serious');
   const EMOJI = ['😂', '🤣', '🤯', '⭐', '💥', '❓'];
   const BARVY = ['#E5484D', '#8FD3FF', '#FF8FB1', '#6FCF7A', '#FFE45C', '#1B2A57'];
-  const HLASKY = [
-    'Trefa, nebo vedle?',
-    'Kdo to věděl, zvedněte ruku!',
-    'Teď už to víš taky.',
-    'Zkus to na kamarády a sleduj jejich obličej.',
-    'Tohle ti ve škole neřeknou.'
-  ];
-  // One guess per picture. The doors stay locked until it is used.
-  const T = {
-    ask: 'Máš jeden tip. Napiš ho, nebo ho řekni.',
-    empty: 'Nejdřív napiš svůj tip.',
-    locked: 'Dvířka se otevřou až po tvém tipu.',
-    solved: 'Tuhle už máš vyřešenou.',
-    missed: 'Tip už padl.',
-    revealed: 'Odpověď už znáš, body za ni nebudou.',
-    custom: 'U vlastních obrázků se body nepočítají. Klikni na dvířka.',
-    listen: 'Poslouchám… řekni svou odpověď.',
-    heard: 'Sedí to? Zmáčkni Tipnout.',
-    noMic: 'Mikrofon tady nejde. Zkus diktování na klávesnici.',
-    noSpeech: 'Nic není slyšet. Zkus to znovu.'
-  };
+  const HLASKY = tr('quips');
+  const T = tr('hints');
 
   const $ = id => document.getElementById(id);
   const stage = $('hra-stage'), pair = $('pair'), q = $('otazka'), m = $('dvirka'), doors = $('doors');
@@ -939,17 +1127,17 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   const AUTO_END_MS = 3200;   // after the last answer is revealed, the finish screen follows by itself
   let body = 0, serie = 0, nejSerie = 0, stav = {};   // stav[id] = 'solved' | 'missed' (wrong guess, doors unlocked) | 'revealed'
   try {
-    body = Number(localStorage.getItem('vp-body')) || 0;
-    serie = Number(localStorage.getItem('vp-serie')) || 0;
-    nejSerie = Number(localStorage.getItem('vp-nejserie')) || 0;
-    stav = JSON.parse(localStorage.getItem('vp-stav') || '{}') || {};
+    body = Number(localStorage.getItem(KEY('vp-body'))) || 0;
+    serie = Number(localStorage.getItem(KEY('vp-serie'))) || 0;
+    nejSerie = Number(localStorage.getItem(KEY('vp-nejserie'))) || 0;
+    stav = JSON.parse(localStorage.getItem(KEY('vp-stav')) || '{}') || {};
   } catch (e) {}
   function save() {
     try {
-      localStorage.setItem('vp-body', String(body));
-      localStorage.setItem('vp-serie', String(serie));
-      localStorage.setItem('vp-nejserie', String(nejSerie));
-      localStorage.setItem('vp-stav', JSON.stringify(stav));
+      localStorage.setItem(KEY('vp-body'), String(body));
+      localStorage.setItem(KEY('vp-serie'), String(serie));
+      localStorage.setItem(KEY('vp-nejserie'), String(nejSerie));
+      localStorage.setItem(KEY('vp-stav'), JSON.stringify(stav));
     } catch (e) {}
   }
 
@@ -961,7 +1149,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   }
   function useSet(ids) {
     DECK.splice(0, DECK.length, ...ids.map(id => POOL.find(p => p.id === id)).filter(Boolean));
-    try { localStorage.setItem('vp-sada', JSON.stringify({ ids: DECK.map(p => p.id), kolo, hrano })); } catch (e) {}
+    try { localStorage.setItem(KEY('vp-sada'), JSON.stringify({ ids: DECK.map(p => p.id), kolo, hrano })); } catch (e) {}
   }
   function dealSet(keep = []) {
     kolo += 1;
@@ -972,7 +1160,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   }
   (() => {
     let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('vp-sada') || 'null'); } catch (e) {}
+    try { saved = JSON.parse(localStorage.getItem(KEY('vp-sada')) || 'null'); } catch (e) {}
     if (saved && Array.isArray(saved.ids)) {
       kolo = saved.kolo || 0; hrano = saved.hrano || {};
       useSet(saved.ids);
@@ -1085,7 +1273,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   };
   function setSound(on, byTap = true) {
     soundOn = on;
-    zvuky.forEach(b => { b.setAttribute('aria-pressed', String(on)); b.title = on ? 'Zvuk je zapnutý' : 'Zvuk je vypnutý'; });
+    zvuky.forEach(b => { b.setAttribute('aria-pressed', String(on)); b.title = tr(on ? 'soundOn' : 'soundOff'); });
     try { localStorage.setItem('avp-zvuk', on ? '1' : '0'); } catch (e) {}
     if (on) { if (byTap) unlock(); }
     else { silentLoop(false); sessionType('auto'); if (AC && AC.state === 'running') AC.suspend().catch(() => {}); }
@@ -1178,7 +1366,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   /* ---------- points ---------- */
   function showScore(bump) {
     scoreN.textContent = body;
-    scoreEl.setAttribute('aria-label', `Body: ${body}` + (serie >= 2 ? `, série ${serie}` : ''));
+    scoreEl.setAttribute('aria-label', tr('scoreAria', body, serie));
     serieEl.hidden = serie < 2;
     serieEl.textContent = `🔥 ${serie}×`;
     if (bump && !reduced()) { scoreEl.classList.remove('bump'); void scoreEl.offsetWidth; scoreEl.classList.add('bump'); }
@@ -1227,7 +1415,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       nejSerie = Math.max(nejSerie, serie);
       const pts = BODY_ZA_TIP + (serie >= 2 ? BONUS_SERIE : 0);
       stav[p.id] = 'solved';
-      banner('win', 'Správně!', serie >= 2 ? `+${pts} · 🔥 ${serie}× série` : `+${pts}`);
+      banner('win', tr('win'), tr('winSub', pts, serie));
       addPoints(pts, input);
       input.value = ''; voice = null;
       openDoors(true, pts);
@@ -1238,7 +1426,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     serie = 0;
     stav[p.id] = 'missed'; save(); showScore(false);
     const msg = r === 'serious' ? (p.vazneText || VAZNE) : '';
-    banner(r === 'close' ? 'close' : 'miss', r === 'close' ? 'Skoro!' : 'Vedle!');
+    banner(r === 'close' ? 'close' : 'miss', tr(r === 'close' ? 'bClose' : 'bMiss'));
     sfx.nope(); shake(); knock(); shakeStage(); setHint(msg);
     await wait(reduced() ? 0 : 500);
     input.value = ''; voice = null;
@@ -1274,7 +1462,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     if (listening) { try { rec.stop(); } catch (e) {} return; }
     let alts = [], failed = false;
     try { rec = new SR(); } catch (e) { micOff(T.noMic); return; }
-    rec.lang = 'cs-CZ'; rec.interimResults = true; rec.maxAlternatives = 4; rec.continuous = false;
+    rec.lang = tr('speech'); rec.interimResults = true; rec.maxAlternatives = 4; rec.continuous = false;
     rec.onstart = () => { listening = true; mic.classList.add('on'); mic.setAttribute('aria-pressed', 'true'); setHint(T.listen); };
     rec.onresult = e => {
       input.value = [...e.results].map(r => r[0].transcript).join(' ');
@@ -1310,7 +1498,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     s.setProperty('--qpos', free ? ((wq - m) / 2 / free * 100).toFixed(3) + '%' : '0%');
     s.setProperty('--apos', free ? ((b + (wa - m) / 2) / free * 100).toFixed(3) + '%' : '100%');
   }
-  function apply(p) { halves(pair, p); q.setAttribute('aria-label', p.otazka || 'Otázka'); }
+  function apply(p) { halves(pair, p); q.setAttribute('aria-label', p.otazka || tr('question')); }
   function setHint(text, good) { hint.textContent = text; hint.classList.toggle('good', !!good); }
   function pickHlaska() {
     let k; do { k = Math.floor(Math.random() * HLASKY.length); } while (k === lastHint);
@@ -1324,7 +1512,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       seg.className = k === i ? 'cur' : st === 'solved' ? 'ok' : st ? 'no' : '';
       bar.appendChild(seg);
     });
-    $('prog').setAttribute('aria-label', `Hádanka ${i + 1} z ${DECK.length}. Otevřít přehled hádanek.`);
+    $('prog').setAttribute('aria-label', tr('progAria', i + 1, DECK.length));
   }
   const sheet = $('prehled');
   function openSheet() {
@@ -1336,7 +1524,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       if (hidden) b.style.removeProperty('--img');   // upcoming riddles stay a surprise
       b.innerHTML = (hidden ? '<span class="qmk" aria-hidden="true">?</span>' : '') + `<span class="tn">${k + 1}</span>` +
         (st ? `<span class="bdg${st === 'solved' ? ' ok' : ''}">${st === 'solved' ? ICON_OK : ICON_NO}</span>` : '');
-      b.setAttribute('aria-label', hidden ? `Hádanka ${k + 1}: ještě nehraná` : `Hádanka ${k + 1}: ${p.otazka || 'vlastní obrázek'}${st === 'solved' ? ' (uhodnuto)' : st ? ' (vedle)' : ''}`);
+      b.setAttribute('aria-label', hidden ? tr('tileHidden', k + 1) : tr('tile', k + 1, p.otazka, st));
       b.addEventListener('click', () => { closeSheet(); if (k !== i) show(k); });
       g.appendChild(b);
     });
@@ -1354,15 +1542,15 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     m.classList.toggle('locked', guessing);
     m.classList.toggle('ready', !guessing && !open);
     m.setAttribute('aria-disabled', String(guessing));
-    plateTxt.textContent = guessing ? 'nejdřív tipni' : 'klikni a otevři';
+    plateTxt.textContent = tr(guessing ? 'guessFirst' : 'tapToOpen');
     if (open) {
       const more = nextUndone(i) >= 0;
-      main.innerHTML = more ? `Další ${ARROW}` : `Výsledky ${ARROW}`;
+      main.innerHTML = `${tr(more ? 'next' : 'results')} ${ARROW}`;
       if (more) main.classList.remove('auto');
       main.classList.toggle('pink', !more);
-      m.setAttribute('aria-label', p.odpoved ? `Odpověď: ${p.odpoved}` : 'Odpověď je odkrytá');
+      m.setAttribute('aria-label', tr('answerAria', p.odpoved));
     } else {
-      m.setAttribute('aria-label', guessing ? 'Dvířka jsou zamčená. Nejdřív napiš svůj tip.' : 'Otevřít dvířka a ukázat odpověď');
+      m.setAttribute('aria-label', tr(guessing ? 'lockedAria' : 'openDoors'));
     }
     renderProg();
     pair.classList.toggle('can-flip', open || !canGuess(p));
@@ -1386,8 +1574,8 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     win ? sfx.fanfare() : sfx.tada();
     const set = win ? [...(p.emoji || EMOJI), '⭐', '🏆', '✨'] : (p.emoji || EMOJI);
     setTimeout(() => burst(m, set, win ? 56 : 34), 330);
-    sr.textContent = p.odpoved ? `Odpověď: ${p.odpoved}` : 'Dvířka jsou otevřená.';
-    render(win ? `Správně! +${pts} bodů.` : pickHlaska(), win);
+    sr.textContent = tr('srOpen', p.odpoved);
+    render(win ? tr('correctHint', pts) : pickHlaska(), win);
     if (nextUndone(i) < 0 && scorable().every(q => stav[q.id])) {
       clearTimeout(endTimer);
       main.classList.add('auto'); main.style.setProperty('--auto', AUTO_END_MS + 'ms');
@@ -1402,7 +1590,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     stopAutoEnd();
     open = false; sfx.close();
     m.classList.remove('open'); pair.classList.remove('done');
-    sr.textContent = 'Dvířka jsou zavřená.';
+    sr.textContent = tr('srClosed');
     render();
     if (!form.hidden && finePointer()) input.focus();
   }
@@ -1471,7 +1659,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       if (n >= text.length) clearInterval(typer);
     }, 32);
   }
-  const riddles = () => DECK.filter(p => p.otazka).map(p => 'A ' + p.otazka.charAt(0).toLowerCase() + p.otazka.slice(1));
+  const riddles = () => DECK.filter(p => p.otazka).map(p => tr('riddleLine', p.otazka));
   function nextRiddle() {
     const list = riddles();
     if (!list.length) return;
@@ -1492,7 +1680,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
 
     const r = rankFor(body), nx = nextRank(body);
     $('rk-name').textContent = r.name;
-    $('rk-sub').textContent = nx ? `${body} bodů · ${nx.name} za ${nx.min - body}` : `${body} bodů · nejvyšší hodnost`;
+    $('rk-sub').textContent = tr('rankSub', body, nx && nx.name, nx && nx.min - body);
     const pct = nx ? Math.round((body - r.min) / (nx.min - r.min) * 100) : 100;
     $('rk-xp').style.setProperty('--p', pct + '%');
     $('rk-bar').setAttribute('aria-valuenow', String(pct));
@@ -1500,7 +1688,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
 
     // Taped polaroids of a few riddles around the title (decoration only); played ones get a tick or a cross.
     const pols = $('pols'); pols.textContent = '';
-    [...DECK].sort(() => Math.random() - .5).slice(0, 6).forEach(p => {
+    [...(DECK.length ? DECK : HADANKY)].sort(() => Math.random() - .5).slice(0, 6).forEach(p => {
       const c = document.createElement('span'); c.className = 'pol';
       const ph = document.createElement('span'); ph.className = 'ph'; halves(ph, p); c.appendChild(ph);
       const s = stav[p.id];
@@ -1513,22 +1701,29 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       pols.appendChild(c);
     });
 
+    hrat.hidden = !DECK.length;
+    if (!DECK.length) {   // English before its pictures exist
+      $('qotd-t').textContent = tr('soonTitle'); clearInterval(riddleTimer); say(tr('soon'));
+      hstat.textContent = tr('soonStat'); znovu.hidden = true; $('nove').hidden = true; pravidla.hidden = false;
+      lbBtn.hidden = !lbOk;
+      return;
+    }
     const done = homeMode === 'done';
     home.classList.toggle('done', done);
     pravidla.hidden = done;
-    $('qotd-t').textContent = done ? 'Bravo!' : 'Zkus uhodnout';
-    if (done) say(okN === total ? `Wow! Všech ${total} správně. Máš ${body} bodů!` : `Hotovo! Máš ${body} bodů. Zapiš se do žebříčku!`);
+    $('qotd-t').textContent = tr(done ? 'bravo' : 'tryToGuess');
+    if (done) say(okN === total ? tr('allRight', total, body) : tr('doneSay', body));
     else startRiddles();
     recordFirst();
     lbBtn.hidden = !lbOk;
     if (done) {
-      hstat.textContent = `Máš ${body} bodů · uhodnuto ${okN} z ${total}`;
-      hrat.textContent = 'Hrát znovu';
-      znovu.textContent = 'Moje výsledky'; znovu.hidden = false;
+      hstat.textContent = tr('statDone', body, okN, total);
+      hrat.textContent = tr('playAgain');
+      znovu.textContent = tr('myResults'); znovu.hidden = false;
       $('nove').hidden = POOL.length <= SADA;
     } else {
-      hstat.textContent = homeMode === 'progress' ? `Hotovo ${doneN} z ${total}` : `${total} hádanek · až ${max} bodů`;
-      hrat.textContent = homeMode === 'progress' ? 'Pokračovat' : 'Hrát';
+      hstat.textContent = homeMode === 'progress' ? tr('statProgress', doneN, total) : tr('statFresh', total, max);
+      hrat.textContent = tr(homeMode === 'progress' ? 'cont' : 'play');
       znovu.hidden = true; $('nove').hidden = true;
     }
   }
@@ -1556,9 +1751,9 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
   async function countdown() {
     if (reduced()) return;
     cd.hidden = false;
-    for (const [t, c] of [['3', 'cy'], ['2', 'pk'], ['1', 'sun'], ['Jedem!', 'lime']]) {
-      cdT.textContent = t; cdT.className = c;
-      sfx.blip(t.length > 1);
+    for (const [w, c] of [['3', 'cy'], ['2', 'pk'], ['1', 'sun'], [tr('go'), 'lime']]) {
+      cdT.textContent = w; cdT.className = c;
+      sfx.blip(w.length > 1);
       cdT.getAnimations().forEach(a => a.cancel());
       cdT.animate([
         { transform: 'scale(2.4) rotate(-10deg)', opacity: 0 },
@@ -1566,7 +1761,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
         { transform: 'scale(.92)', opacity: 1, offset: .8 },
         { transform: 'scale(.6)', opacity: 0 }
       ], { duration: 540, easing: 'cubic-bezier(.2,.9,.3,1)' });
-      await wait(t.length > 1 ? 600 : 540);
+      await wait(w.length > 1 ? 600 : 540);
     }
     cd.hidden = true;
   }
@@ -1677,13 +1872,13 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     const list = scorable(), total = list.length, okN = list.filter(p => stav[p.id] === 'solved').length;
     // Czech school grade: 1 is the best, 5 the worst.
     const f = total ? okN / total : 0, g = f >= .9 ? 1 : f >= .7 ? 2 : f >= .5 ? 3 : f >= .3 ? 4 : 5;
-    const gName = ['výborně', 'chvalitebně', 'dobře', 'dostatečně', 'zkus znovu'][g - 1];
-    $('znamka-n').textContent = g; $('znamka-t').textContent = gName;
-    $('znamka').setAttribute('aria-label', `Známka ${g}, ${gName}`);
-    $('end-t').textContent = okN === total ? 'Legenda!' : 'Hotovo!';
-    $('res-m').textContent = okN === total ? 'Všechno správně. Klobouk dolů!' : okN >= total * .66 ? 'Skvělá práce!' : okN >= total * .33 ? 'Dobrý začátek!' : 'Tyhle byly fakt záludné.';
+    const gName = tr('grades')[g - 1], gMark = tr('marks')[g - 1];
+    $('znamka-n').textContent = gMark; $('znamka-t').textContent = gName;
+    $('znamka').setAttribute('aria-label', tr('gradeAria', gMark, gName));
+    $('end-t').textContent = tr(okN === total ? 'legend' : 'done');
+    $('res-m').textContent = tr('praise')[okN === total ? 0 : okN >= total * .66 ? 1 : okN >= total * .33 ? 2 : 3];
     const stats = $('end-stats'); stats.textContent = '';
-    [['uhodnuto', `${okN} z ${total}`], ['nejdelší série', `${nejSerie}×`], ['hodnost', rankFor(body).name]].forEach(([label, value]) => {
+    [[tr('stats')[0], tr('statOf', okN, total)], [tr('stats')[1], `${nejSerie}×`], [tr('stats')[2], rankFor(body).name]].forEach(([label, value]) => {
       const li = document.createElement('li');
       li.append(label + ' ', Object.assign(document.createElement('b'), { textContent: value }));
       stats.appendChild(li);
@@ -1702,14 +1897,14 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     if (lbOk) loadEnd();
   }
   async function loadEnd() {
-    endList.textContent = ''; svNote.textContent = 'Načítám žebříček…';
+    endList.textContent = ''; svNote.textContent = tr('lbLoading');
     try {
       const d = await api(null, `?dev=${DEV}`);
       if (!d.ok) throw new Error('chyba');
       if (d.ja) setZapsano(d.ja);
       renderEndList(d);
     } catch (e) {
-      svNote.textContent = 'Žebříček teď nejde načíst. Zkus to za chvíli.';
+      svNote.textContent = tr('lbError');
     }
   }
   // Top of the leaderboard with your row slotted in where your score lands; not saved yet = the name goes right into that row.
@@ -1728,12 +1923,12 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       const pt = document.createElement('span'); pt.className = 'pt'; pt.textContent = z.body;
       if (isMe && !saved) {
         const f = document.createElement('form'); f.autocomplete = 'off';
-        f.innerHTML = '<label class="sr" for="sv-jmeno">Tvoje přezdívka</label><input id="sv-jmeno" type="text" maxlength="16" placeholder="Tvoje přezdívka" autocomplete="nickname" spellcheck="false"><button class="btn pink" type="submit" id="sv-btn">Uložit</button>';
+        f.innerHTML = `<label class="sr" for="sv-jmeno">${tr('nick')}</label><input id="sv-jmeno" type="text" maxlength="16" placeholder="${tr('nick')}" autocomplete="nickname" spellcheck="false"><button class="btn pink" type="submit" id="sv-btn">${tr('save')}</button>`;
         f.addEventListener('submit', ev => { ev.preventDefault(); saveName(f); });
         li.append(rk, f, pt);
       } else {
         const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = z.jmeno;
-        if (isMe) nm.insertAdjacentHTML('beforeend', '<i class="you">TY</i>');
+        if (isMe) nm.insertAdjacentHTML('beforeend', `<i class="you">${tr('you')}</i>`);
         const ok = document.createElement('span'); ok.className = 'okc'; ok.textContent = `✓ ${z.spravne}`;
         li.append(rk, nm, ok, pt);
       }
@@ -1748,15 +1943,14 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     }
     const replay = prvni && prvni.b !== body;
     svNote.textContent = saved
-      ? `Jsi v žebříčku na ${myRank}. místě. Hráčů celkem: ${d.celkem}.`
-      : (top.length ? `S tímhle skóre jsi na ${myRank}. místě! ` : 'Zatím tu nikdo není. Buď první! ') +
-        'Napiš přezdívku a zapiš se. Uloží se jen přezdívka a body.' + (replay ? ` Počítá se tvoje první hra (${prvni.b} bodů).` : '');
+      ? tr('noteSaved', myRank, d.celkem)
+      : (top.length ? tr('noteRank', myRank) : tr('noteEmpty')) + tr('noteSign') + (replay ? tr('noteReplay', prvni.b) : '');
     if (!saved && finePointer()) setTimeout(() => $('sv-jmeno') && $('sv-jmeno').focus({ preventScroll: true }), 900);
   }
   async function saveName(f) {
     const jmenoEl = f.querySelector('input'), btn = f.querySelector('button');
     const jmeno = jmenoEl.value.trim().replace(/\s+/g, ' ');
-    if (!JMENO_OK.test(jmeno)) { svChyba('Přezdívka musí mít 2–16 znaků: písmena, čísla, mezera, tečka nebo pomlčka.'); shakeEl(f); return; }
+    if (!JMENO_OK.test(jmeno)) { svChyba(tr('nickRule')); shakeEl(f); return; }
     if (!prvni) return;
     btn.disabled = true; svChyba('');
     try {
@@ -1765,14 +1959,14 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
         setZapsano(d.ja); renderEndList(d);
         if (d.ok) {
           const m = d.ja.misto;
-          banner('win', m <= 3 ? `${m}. místo!` : 'Zapsáno!', m <= 3 ? '🏆 Jsi na stupních vítězů' : `${m}. místo z ${d.celkem}`);
+          banner('win', m <= 3 ? tr('placeWin', m) : tr('savedWin'), m <= 3 ? tr('podiumSub') : tr('placeOf', m, d.celkem));
           sfx.fanfare(); burst(endLbBox, ['🏆', '⭐', '🎉', '✨'], 40);
         }
-      } else if (d.chyba === 'jmeno') svChyba('Tahle přezdívka nejde. Zkus jinou, bez sprostých slov.');
-      else if (d.chyba === 'moc-pokusu') svChyba('Moc pokusů najednou. Zkus to za chvíli.');
-      else svChyba('Uložení se nepovedlo. Zkus to znovu.');
+      } else if (d.chyba === 'jmeno') svChyba(tr('nickBad'));
+      else if (d.chyba === 'moc-pokusu') svChyba(tr('tooMany'));
+      else svChyba(tr('saveFail'));
     } catch (err) {
-      svChyba('Žebříček teď nejde. Zkus to za chvíli.');
+      svChyba(tr('lbDown'));
     } finally {
       btn.disabled = false;
     }
@@ -1794,10 +1988,10 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       const [left, right, toy] = LOOT[k];
       pod.insertAdjacentHTML('beforeend', `<span class="loot">${prize(left, 'pz l')}${TROFEJ}${prize(right, 'pz r')}</span>`);
       const pn = document.createElement('b'); pn.className = 'pn';
-      pn.textContent = z ? z.jmeno : 'Volno';
-      if (z && ja && z.id === ja.id) pn.insertAdjacentHTML('beforeend', '<i class="you">TY</i>');
+      pn.textContent = z ? z.jmeno : tr('free');
+      if (z && ja && z.id === ja.id) pn.insertAdjacentHTML('beforeend', `<i class="you">${tr('you')}</i>`);
       const pp = document.createElement('span'); pp.className = 'pp';
-      pp.textContent = z ? `${z.body} b` : '–';
+      pp.textContent = z ? tr('pts', z.body) : '–';
       const blk = document.createElement('div'); blk.className = 'blk';
       blk.innerHTML = `<span>${k + 1}</span>${prize(toy, 'toy')}`;
       pod.append(pn, pp, blk);
@@ -1811,7 +2005,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       li.className = 'row' + (ja && z.id === ja.id ? ' me' : '') + (SPRAVCE ? ' admin' : '');
       const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = z.misto;
       const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = z.jmeno;
-      if (ja && z.id === ja.id) nm.insertAdjacentHTML('beforeend', '<i class="you">TY</i>');
+      if (ja && z.id === ja.id) nm.insertAdjacentHTML('beforeend', `<i class="you">${tr('you')}</i>`);
       const ok = document.createElement('span'); ok.className = 'okc'; ok.textContent = `✓ ${z.spravne}`;
       const pt = document.createElement('span'); pt.className = 'pt'; pt.textContent = z.body;
       li.append(rk, nm, ok, pt);
@@ -1823,20 +2017,20 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       const gap = document.createElement('li'); gap.className = 'row gap'; gap.textContent = '⋯';
       lbList.append(gap, row(ja));
     }
-    lbStav.textContent = top.length ? `Hráčů v žebříčku: ${d.celkem}` : 'Zatím tu nikdo není. Dohraj hru a buď první!';
+    lbStav.textContent = top.length ? tr('players', d.celkem) : tr('lbEmpty');
   }
   function delBtn(z) {
     const b = document.createElement('button');
-    b.type = 'button'; b.className = 'del'; b.textContent = 'Smazat';
+    b.type = 'button'; b.className = 'del'; b.textContent = tr('del');
     b.addEventListener('click', async () => {
-      if (!b.dataset.armed) { b.dataset.armed = '1'; b.textContent = 'Opravdu?'; return; }
+      if (!b.dataset.armed) { b.dataset.armed = '1'; b.textContent = tr('sure'); return; }
       lbHeslo = $('lb-heslo').value || lbHeslo;
       try { sessionStorage.setItem('vp-heslo', lbHeslo); } catch (e) {}
       try {
         const d = await api({ akce: 'smazat', id: z.id, heslo: lbHeslo });
-        if (d.ok) { renderLb(d, false); toast(`Smazáno: ${z.jmeno}`); }
-        else toast(d.chyba === 'heslo' ? 'Špatné heslo správce, nebo není nastavené v zebricek.php.' : 'Smazání se nepovedlo.');
-      } catch (e) { toast('Smazání se nepovedlo.'); }
+        if (d.ok) { renderLb(d, false); toast(tr('deleted', z.jmeno)); }
+        else toast(tr(d.chyba === 'heslo' ? 'badPw' : 'delFail'));
+      } catch (e) { toast(tr('delFail')); }
     });
     return b;
   }
@@ -1849,7 +2043,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
       renderLb(d, animate);
       if (animate && d.top && d.top.length && !reduced()) { sfx.tada(); setTimeout(() => burst(podiumEl, ['🏆', '⭐', '✨', '🎉'], 30), 900); }
     } catch (e) {
-      lbStav.textContent = 'Žebříček teď nejde načíst. Zkus to za chvíli.';
+      lbStav.textContent = tr('lbError');
     }
   }
   function openLb() {
@@ -1857,7 +2051,7 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     lbEl.hidden = false; home.inert = true; endEl.inert = true;
     $('lb-admin').hidden = !SPRAVCE;
     if (SPRAVCE) $('lb-heslo').value = lbHeslo;
-    lbStav.textContent = 'Načítám…';
+    lbStav.textContent = tr('loading');
     loadLb(true);
     clearInterval(lbTimer);
     lbTimer = setInterval(() => loadLb(false), 15000);
@@ -1883,9 +2077,29 @@ body::after,.home::after,.end::after,.lb::after{content:"";position:fixed;top:0;
     clearTimeout(toast.t); toast.t = setTimeout(() => toastEl.classList.remove('on'), 3400);
   }
 
+  // Static texts of the page come from TXT too (the Czech ones are already in the markup).
+  function translatePage() {
+    document.documentElement.lang = LANG;
+    document.title = tr('title');
+    document.querySelectorAll('[data-t]').forEach(el => { el.textContent = tr(el.dataset.t); });
+    document.querySelectorAll('[data-t-html]').forEach(el => { el.innerHTML = tr(el.dataset.tHtml); });
+    document.querySelectorAll('[data-t-aria]').forEach(el => { el.setAttribute('aria-label', tr(el.dataset.tAria)); });
+    document.querySelectorAll('[data-t-title]').forEach(el => { el.title = tr(el.dataset.tTitle); });
+    document.querySelectorAll('[data-t-ph]').forEach(el => { el.placeholder = tr(el.dataset.tPh); });
+    document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+  }
+  // Switching reloads the page in the other language; each language keeps its own game in progress.
+  document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.lang === LANG) return;
+    try { localStorage.setItem('vp-jazyk', b.dataset.lang); } catch (e) {}
+    const u = new URL(location.href); u.searchParams.set('lang', b.dataset.lang);
+    location.replace(u.href);
+  }));
+
+  translatePage();
   setSound(soundOn, false);
   showScore(false);
-  setCard(Math.max(0, nextUndone(-1)));
+  if (DECK.length) setCard(Math.max(0, nextUndone(-1)));
   renderHome();
   setGameInert(true);
 })();

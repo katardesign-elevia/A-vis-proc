@@ -1,0 +1,417 @@
+<title>Varianty úvodu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik:wght@500;700;800&family=Caveat+Brush&family=Kalam:wght@700&family=Patrick+Hand&family=Bangers&family=Shantell+Sans:wght@600;800&display=swap">
+<style>
+/* Three title-screen concepts for "A víš proč?", one at a time, switched with the pill at the bottom.
+   A = TV quiz show (curtains, marquee bulbs, buzzer) · B = school exercise book (squared paper, tape, marker)
+   C = comic page (halftone, panels, POW burst). Each look is deliberately fixed, so colours are set per variant. */
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;overflow:hidden;background:#120612;color:#fff;font:500 16px/1.4 "Rubik",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #2DE2E6;outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.v{position:fixed;inset:0;display:none;overflow-x:hidden;overflow-y:auto}
+.v.on{display:block}
+.card{display:block;aspect-ratio:var(--ar);background-color:#222;background-image:var(--img);background-size:auto 100%;background-position:var(--qpos) 0;background-repeat:no-repeat}
+
+/* style switcher */
+.tabs{
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:100;transform:translateX(-50%);
+  display:flex;gap:4px;max-width:calc(100% - 24px);padding:5px;
+  background:rgba(12,10,18,.9);border:2px solid rgba(255,255,255,.2);border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+.tabs button{display:flex;align-items:center;gap:.4em;padding:.6em 1em;cursor:pointer;white-space:nowrap;font:700 13px/1 "Rubik";color:#d6d0e4;background:none;border:0;border-radius:999px}
+.tabs button b{display:grid;place-items:center;width:1.6em;height:1.6em;font-weight:800;color:#120A1F;background:#d6d0e4;border-radius:50%}
+.tabs button[aria-selected="true"]{color:#120A1F;background:#fff}
+.tabs button[aria-selected="true"] b{background:#FFD21F}
+.toast{
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);z-index:101;max-width:calc(100% - 32px);padding:.7em 1.1em;
+  font:700 14px/1.35 "Rubik";color:#120A1F;background:#fff;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.35);
+  transform:translate(-50%,20px);opacity:0;visibility:hidden;transition:transform .3s,opacity .2s,visibility 0s .3s;
+}
+.toast.on{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .3s,opacity .2s}
+.topbar{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:16px;right:16px;z-index:6;display:flex;align-items:center;gap:10px}
+.topbar .rt{margin-left:auto;display:flex;align-items:center;gap:8px}
+
+/* =====================================================================
+   A · SHOW — a TV quiz show stage
+   ===================================================================== */
+.va{background:radial-gradient(120% 80% at 50% 0%,#4f0e1d 0%,#1f0711 55%,#0b0307 100%);color:#fff}
+.va .floor{position:fixed;left:0;right:0;bottom:0;height:34vh;z-index:0;background:linear-gradient(transparent,rgba(255,190,90,.07)),repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 2px,transparent 2px 70px);transform:perspective(400px) rotateX(55deg);transform-origin:bottom}
+.va .beam{
+  position:fixed;top:-6vh;z-index:1;width:30vmax;height:112vh;pointer-events:none;mix-blend-mode:screen;filter:blur(5px);
+  clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);background:linear-gradient(rgba(255,236,170,.38),rgba(255,236,170,0) 82%);
+  transform-origin:50% 0;animation:sweep 6s ease-in-out infinite alternate;
+}
+.va .beam.l{left:2%;--r1:-22deg;--r2:12deg}
+.va .beam.r{right:2%;--r1:22deg;--r2:-12deg;animation-delay:-3s}
+.va .curtain{
+  position:fixed;top:0;bottom:0;z-index:4;width:max(46px,13vw);pointer-events:none;
+  background:repeating-linear-gradient(90deg,#6d0b1b 0 14px,#a1152c 14px 26px,#560716 26px 38px);box-shadow:inset 0 0 50px rgba(0,0,0,.65);
+  animation:curtainL 1.5s cubic-bezier(.6,0,.2,1) backwards;
+}
+.va .curtain.l{left:0;transform-origin:left}
+.va .curtain.r{right:0;transform-origin:right;animation-name:curtainR}
+.va .valance{
+  position:fixed;top:0;left:0;right:0;z-index:5;height:46px;pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.55));
+  background:radial-gradient(circle at 50% 0,#a1152c 0 26px,transparent 27px) 0 0/56px 46px,linear-gradient(#7a0d1e,#7a0d1e) top/100% 18px no-repeat;
+}
+.va .topbar{top:calc(env(safe-area-inset-top,0px) + 54px);left:max(56px,14vw);right:max(56px,14vw)}
+.va-btn{display:grid;place-items:center;width:44px;height:44px;padding:0;cursor:pointer;color:#FFD45C;background:#2a0a12;border:3px solid #E8B64C;border-radius:50%;box-shadow:0 0 14px rgba(255,190,80,.35)}
+.va-btn svg{width:22px;height:22px}
+.va-score{display:flex;align-items:center;gap:6px;padding:7px 14px;font:400 18px/1 "Bungee";color:#FFD45C;background:#2a0a12;border:3px solid #E8B64C;border-radius:999px}
+.applause{margin-inline:auto;padding:5px 10px;font:400 13px/1 "Bungee";letter-spacing:.06em;color:#ff5b5b;border:2px solid #ff5b5b;border-radius:6px;text-shadow:0 0 10px #ff2e2e;box-shadow:0 0 12px rgba(255,60,60,.4);animation:blink 1.4s steps(2) infinite}
+.va-wrap{
+  position:relative;z-index:3;min-height:100%;display:grid;justify-items:center;align-content:center;gap:clamp(16px,3vh,30px);
+  padding:calc(env(safe-area-inset-top,0px) + 104px) max(60px,15vw) 84px;text-align:center;
+}
+.sign{position:relative;padding:clamp(16px,2.6vw,28px) clamp(22px,4vw,52px);background:linear-gradient(#5a0a18,#360510);border:6px solid #E8B64C;border-radius:20px;box-shadow:0 0 0 6px #360510,0 0 50px rgba(255,190,80,.4),inset 0 0 30px rgba(0,0,0,.55);animation:signOn 1.2s .9s ease-out backwards}
+.sign::before{
+  content:"";position:absolute;inset:-18px;padding:9px;border-radius:30px;pointer-events:none;
+  background:radial-gradient(circle,#FFF4BF 0 3.5px,rgba(255,200,80,.25) 4.5px,transparent 6px) 0 0/22px 22px;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  animation:chase .5s steps(2) infinite;
+}
+.sign h1{margin:0;font:400 clamp(34px,min(9vw,9.5vh),92px)/.98 "Bungee";color:#FFD45C;text-shadow:0 0 18px rgba(255,190,60,.75),0 5px 0 #8a5a10}
+.sign h1 i{font-style:normal;color:#fff;text-shadow:0 0 16px rgba(255,255,255,.6),0 5px 0 #8a5a10}
+.va-stage{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:clamp(24px,6vw,80px)}
+.screen{display:grid;justify-items:center;gap:10px}
+.screen-box{position:relative;width:clamp(118px,min(22vw,24vh),230px);padding:10px;background:#111;border:4px solid #000;border-radius:18px;box-shadow:0 0 0 3px #E8B64C,0 12px 0 #000}
+.screen-box .card{position:relative;border-radius:10px;transition:opacity .35s ease}
+.screen-box .card::after{content:"";position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(rgba(0,0,0,.16) 0 2px,transparent 2px 4px)}
+.screen-cap{font:400 13px/1 "Bungee";letter-spacing:.05em;color:#E8B64C}
+.podium{display:grid;justify-items:center;gap:14px}
+.buzzer{
+  position:relative;width:clamp(120px,min(26vw,22vh),210px);aspect-ratio:1;border:0;border-radius:50%;cursor:pointer;
+  font:400 clamp(30px,6vw,44px)/1 "Bungee";color:#fff;text-shadow:0 3px 0 #6e0010;
+  background:radial-gradient(circle at 34% 28%,#ff9b9b 0,#ff2a3d 34%,#b5001a 70%,#6e0010 100%);
+  box-shadow:0 0 0 10px #c9c9cf,0 0 0 16px #6c6c76,0 16px 0 10px #3c3c44,0 24px 36px rgba(0,0,0,.6),inset 0 -12px 22px rgba(0,0,0,.35);
+  transition:transform .08s ease;animation:buzzGlow 1.6s ease-in-out infinite;
+}
+.buzzer:active{transform:translateY(8px) scale(.98)}
+.buzzer small{display:block;margin-top:4px;font:800 11px/1 "Rubik";letter-spacing:.14em;color:#ffd0d0;text-shadow:none}
+.stand{width:clamp(130px,min(28vw,24vh),230px);height:clamp(34px,6vh,56px);margin-top:6px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);background:repeating-linear-gradient(90deg,#E8B64C 0 18px,#b78421 18px 36px);box-shadow:inset 0 8px 0 rgba(0,0,0,.25)}
+.va-hint{margin:0;font:700 14px/1.3 "Rubik";color:#f3d9a8}
+
+/* =====================================================================
+   B · SEŠIT — a school exercise book collage
+   ===================================================================== */
+.vb{
+  color:#1B2A57;background-color:#FBF8EF;
+  background-image:linear-gradient(rgba(70,120,200,.17) 1px,transparent 1px),linear-gradient(90deg,rgba(70,120,200,.17) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.vb .margin{position:fixed;top:0;bottom:0;left:clamp(30px,7vw,74px);width:2px;background:rgba(220,60,60,.6);z-index:0}
+.vb .holes{position:fixed;top:0;bottom:0;left:clamp(6px,1.6vw,18px);width:18px;z-index:0;background:radial-gradient(circle,#e3dccb 0 6px,rgba(0,0,0,.08) 7px,transparent 8px) 0 34px/18px 96px repeat-y}
+.vb .topbar{left:clamp(44px,9vw,92px)}
+.vb-tab{display:flex;align-items:center;gap:6px;padding:8px 14px 10px;cursor:pointer;font:700 18px/1 "Kalam";color:#1B2A57;background:#9FE3C0;border:2px solid #1B2A57;border-radius:12px 12px 4px 4px;transform:rotate(-2deg);box-shadow:3px 3px 0 #1B2A57}
+.vb-score{font:700 20px/1 "Kalam";color:#1B2A57}
+.vb-score b{color:#E5484D}
+.vb-snd{display:grid;place-items:center;width:42px;height:42px;padding:0;cursor:pointer;color:#1B2A57;background:#fff;border:2px solid #1B2A57;border-radius:50% 45% 50% 40%;box-shadow:2px 3px 0 #1B2A57}
+.vb-snd svg{width:22px;height:22px}
+.vb-wrap{
+  position:relative;z-index:1;min-height:100%;max-width:1100px;margin:0 auto;
+  display:grid;justify-items:center;align-content:center;gap:clamp(14px,2.6vh,26px);
+  padding:calc(env(safe-area-inset-top,0px) + 76px) 20px 110px clamp(46px,10vw,100px);text-align:center;
+}
+.vb-stage{position:relative;width:min(900px,100%);display:grid;place-items:center;min-height:clamp(250px,38vh,380px)}
+.vb h1{position:relative;z-index:2;margin:0;font:400 clamp(68px,15vw,160px)/.86 "Caveat Brush";color:#1B2A57;transform:rotate(-3deg)}
+.vb h1 .hl{position:relative;display:inline-block}
+.vb h1 .hl::before{content:"";position:absolute;left:-6%;right:-4%;top:44%;height:46%;z-index:-1;background:#FFE45C;border-radius:6px;transform:skew(-10deg) scaleX(0);transform-origin:left;animation:hl .7s .6s ease-out forwards}
+.vb h1 .qm{color:#E5484D;display:inline-block;transform-origin:50% 90%;animation:nod 2.6s ease-in-out infinite}
+.vb .sub{position:relative;z-index:2;margin:.15em 0 0;font:700 clamp(18px,2.6vw,26px)/1.2 "Kalam";color:#3b4a80;transform:rotate(-2deg)}
+.pol{position:absolute;z-index:1;width:clamp(86px,15vw,150px);padding:7px 7px 26px;background:#fff;box-shadow:0 8px 16px rgba(27,42,87,.2);transform:rotate(var(--r));animation:drop .7s cubic-bezier(.3,1.4,.5,1) backwards;animation-delay:var(--d)}
+.pol .card{width:100%;background-color:#ddd}
+.pol span{position:absolute;left:0;right:0;bottom:4px;font:400 15px/1 "Patrick Hand";color:#555}
+.pol::before{content:"";position:absolute;top:-12px;left:50%;width:64px;height:22px;transform:translateX(-50%) rotate(-5deg);background:var(--tape);opacity:.75}
+.pol.p1{--r:-9deg;--d:.15s;--tape:#FF8FB1;left:2%;top:4%}
+.pol.p2{--r:7deg;--d:.3s;--tape:#8FD3FF;right:3%;top:0}
+.pol.p3{--r:-4deg;--d:.45s;--tape:#B6F08A;right:12%;bottom:-6%}
+.vb-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(20px,5vw,60px)}
+.vb-play{position:relative;display:grid;justify-items:center}
+.vb .play{
+  padding:.12em .9em .22em;cursor:pointer;font:400 clamp(44px,8vw,68px)/1 "Caveat Brush";color:#fff;background:#E5484D;border:3px solid #1B2A57;
+  border-radius:255px 18px 225px 18px/18px 225px 18px 255px;box-shadow:5px 6px 0 #1B2A57;transform:rotate(-2deg);transition:transform .15s;
+}
+.vb .play:hover{animation:wiggle .5s ease-in-out}
+.vb .play:active{transform:rotate(-2deg) translate(3px,4px);box-shadow:2px 2px 0 #1B2A57}
+.vb .arrow{position:absolute;left:-118px;top:-34px;width:120px;height:80px;pointer-events:none}
+.vb .arrow path{fill:none;stroke:#1B2A57;stroke-width:3;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:220;animation:draw 1s 1.1s ease-out forwards}
+.vb .arrow text{font:700 18px "Kalam";fill:#E5484D}
+.postit{
+  width:min(250px,78vw);padding:16px 18px 20px;text-align:left;font:700 18px/1.4 "Kalam";color:#2A2A2A;
+  background:linear-gradient(#FFF27A,#FFE94E);box-shadow:0 12px 18px rgba(27,42,87,.18);transform:rotate(3deg);
+  animation:drop .7s .6s cubic-bezier(.3,1.4,.5,1) backwards;--r:3deg;
+}
+.postit b{display:block;margin-bottom:4px;font:400 26px/1 "Caveat Brush";color:#1B2A57}
+.postit ol{margin:0;padding-left:1.2em}
+.doodle{position:absolute;pointer-events:none;color:#1B2A57;opacity:.75}
+.doodle path{fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:300;stroke-dashoffset:300;animation:draw 1.4s ease-out forwards}
+.doodle.d1{left:18%;bottom:8%;width:60px}
+.doodle.d2{right:30%;top:6%;width:44px;color:#E5484D}
+
+/* =====================================================================
+   C · KOMIKS — a comic book page
+   ===================================================================== */
+.vc{color:#111;background-color:#FFE14D;background-image:radial-gradient(rgba(232,50,43,.33) 22%,transparent 24%);background-size:12px 12px}
+.vc .topbar{z-index:8}
+.vc-tag{padding:6px 12px;cursor:pointer;font:400 18px/1 "Bangers";letter-spacing:.06em;color:#111;background:#fff;border:4px solid #111;box-shadow:4px 4px 0 #111;transform:rotate(-2deg)}
+.vc-score{padding:6px 14px;font:400 20px/1 "Bangers";letter-spacing:.04em;background:#fff;border:4px solid #111;border-radius:50%;box-shadow:4px 4px 0 #111}
+.vc-snd{display:grid;place-items:center;width:44px;height:44px;padding:0;cursor:pointer;background:#2DE2E6;border:4px solid #111;box-shadow:4px 4px 0 #111}
+.vc-snd svg{width:22px;height:22px}
+.vc-grid{
+  position:relative;z-index:1;min-height:100%;max-width:1080px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;align-content:center;
+  padding:calc(env(safe-area-inset-top,0px) + 72px) 16px 86px;
+}
+.panel{position:relative;overflow:hidden;background:#fff;border:5px solid #111;box-shadow:8px 8px 0 #111;animation:slam .5s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:var(--d)}
+.cap{position:absolute;top:0;left:0;z-index:3;padding:5px 12px;font:400 16px/1 "Bangers";letter-spacing:.05em;color:#111;background:#FFE14D;border-right:4px solid #111;border-bottom:4px solid #111}
+.pn1{grid-column:1/5;grid-row:span 2;display:grid;place-items:center;min-height:clamp(190px,30vh,300px);background:repeating-conic-gradient(from 0deg at 50% 55%,#E8322B 0 10deg,#FF6A3D 10deg 20deg);--d:.05s}
+.burst{position:relative;display:grid;place-items:center;width:min(92%,560px);aspect-ratio:1.7;background:#FFE14D;clip-path:polygon(50% 0,58% 18%,75% 6%,74% 26%,96% 20%,84% 40%,100% 52%,82% 60%,92% 82%,70% 74%,64% 98%,50% 80%,36% 98%,30% 74%,8% 82%,18% 60%,0 52%,16% 40%,4% 20%,26% 26%,25% 6%,42% 18%);animation:pulse 2.4s ease-in-out infinite}
+.pn1 h1{position:absolute;margin:0;text-align:center;font:400 clamp(44px,8.5vw,96px)/.9 "Bangers";letter-spacing:.03em;color:#fff;-webkit-text-stroke:.07em #111;paint-order:stroke fill;text-shadow:.06em .06em 0 #111;transform:rotate(-6deg)}
+.pn2{grid-column:5/7;grid-row:span 2;display:grid;align-content:end;justify-items:center;padding:12px 10px 0;background:#8FD3FF;--d:.2s}
+.bub{position:relative;z-index:2;width:100%;min-height:5.2em;margin-bottom:14px;padding:12px 14px;font:800 clamp(14px,1.6vw,17px)/1.3 "Shantell Sans";color:#111;background:#fff;border:4px solid #111;border-radius:22px}
+.bub::after{content:"";position:absolute;left:44%;bottom:-22px;width:26px;height:26px;background:#fff;border-right:4px solid #111;border-bottom:4px solid #111;transform:skewX(25deg) rotate(45deg)}
+.pn2 .mascot{width:min(150px,70%);margin-bottom:-6px}
+.pn3{grid-column:1/3;display:grid;place-items:center;min-height:clamp(150px,22vh,200px);background:#2DE2E6;--d:.35s}
+.pow{
+  position:relative;display:grid;place-items:center;width:min(240px,90%);aspect-ratio:1.15;padding:0;border:0;cursor:pointer;
+  font:400 clamp(40px,6vw,58px)/1 "Bangers";letter-spacing:.04em;color:#fff;-webkit-text-stroke:.08em #111;paint-order:stroke fill;text-shadow:.07em .07em 0 #111;
+  background:#E8322B;clip-path:polygon(50% 0,60% 20%,82% 8%,78% 32%,100% 36%,84% 54%,98% 76%,74% 74%,68% 100%,50% 82%,32% 100%,26% 74%,2% 76%,16% 54%,0 36%,22% 32%,18% 8%,40% 20%);
+  animation:wobble 2s ease-in-out infinite;transition:transform .1s;
+}
+.pow:active{transform:scale(.92)}
+.pn4,.pn5{grid-column:span 2;--d:.5s}
+.pn5{--d:.62s}
+.pn4 .card,.pn5 .card{width:100%;height:100%;min-height:clamp(150px,22vh,200px);aspect-ratio:auto;background-size:cover;background-position:var(--qpos) 20%}
+.pn4 .say,.pn5 .say{position:absolute;right:8px;bottom:8px;z-index:2;padding:6px 10px;font:800 13px/1.2 "Shantell Sans";background:#fff;border:3px solid #111;border-radius:14px}
+.vc-rules{grid-column:1/-1;justify-self:center;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;--d:.75s;animation:slam .5s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:var(--d)}
+.vc-rules span{padding:6px 12px;font:800 14px/1.2 "Shantell Sans";background:#fff;border:3px solid #111;box-shadow:3px 3px 0 #111;transform:rotate(var(--r,-1deg))}
+.vc-rules span:nth-child(2){--r:1.5deg}
+.vc-rules span:nth-child(3){--r:-2deg}
+/* mascot (shared with the game) */
+.mascot svg{display:block;width:100%;height:auto;overflow:visible}
+.m-body{transform-box:fill-box;transform-origin:50% 100%;animation:squish 2.4s ease-in-out infinite}
+.m-dot{transform-box:fill-box;transform-origin:50% 100%;animation:hop 2.4s ease-in-out infinite}
+.m-ink{fill:none;stroke:#111;stroke-width:80;stroke-linecap:round}
+.m-fill{fill:none;stroke:#FF3D8B;stroke-width:62;stroke-linecap:round}
+.m-shine{fill:none;stroke:rgba(255,255,255,.5);stroke-width:9;stroke-linecap:round}
+.m-dotc{fill:#FF3D8B;stroke:#111;stroke-width:9}
+.m-dotx{fill:#111}
+.m-shadow{fill:rgba(0,0,0,.25)}
+.eye{transform-box:fill-box;transform-origin:center;animation:blinkEye 4.6s infinite}
+.ew{fill:#fff;stroke:#111;stroke-width:5}
+.pupil circle:first-child{fill:#111}
+.pupil circle:last-child{fill:#fff}
+.happy,.m-mouth2{display:none}
+.m-mouth{fill:none;stroke:#111;stroke-width:5.5;stroke-linecap:round}
+
+@media (max-width:700px){
+  .va-wrap{padding-inline:max(50px,13vw)}
+  .va-stage{flex-wrap:nowrap;gap:14px}
+  .screen-box{width:clamp(96px,32vw,150px);padding:7px}
+  .buzzer{width:clamp(100px,32vw,150px);font-size:clamp(22px,7vw,32px)}
+  .stand{width:clamp(110px,36vw,170px)}
+  .applause{display:none}
+  .vb .arrow{display:none}
+  .pol{width:clamp(78px,24vw,120px)}
+  .pol.p1{left:-2%;top:-8%}
+  .pol.p2{right:-2%;top:-12%}
+  .pol.p3{right:auto;left:30%;bottom:-24%}
+  .vb-stage{min-height:300px;margin-bottom:30px}
+  .vc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .pn1,.pn2,.pn3{grid-column:1/-1;grid-row:auto}
+  .pn1{min-height:150px}
+  .pn1 h1{font-size:clamp(40px,13vw,64px)}
+  .pn2{grid-template-columns:110px 1fr;align-items:end;gap:10px;padding:12px 12px 0;justify-items:stretch}
+  .pn2 .bub{order:2;margin-bottom:16px}
+  .pn2 .bub::after{left:-14px;bottom:24px;transform:skewY(25deg) rotate(135deg)}
+  .pn2{grid-template-columns:84px 1fr}
+  .pn2 .mascot{width:84px}
+  .pn3{min-height:120px}
+  .pow{width:min(170px,70%);font-size:40px}
+  .pn4,.pn5{grid-column:span 1}
+  .pn4 .card,.pn5 .card{min-height:130px}
+  .vc-grid{gap:12px}
+}
+
+@keyframes sweep{from{transform:rotate(var(--r1))}to{transform:rotate(var(--r2))}}
+@keyframes curtainL{from{transform:scaleX(4.2)}}
+@keyframes curtainR{from{transform:scaleX(4.2)}}
+@keyframes chase{to{background-position:11px 0}}
+@keyframes signOn{0%{filter:brightness(.3)}20%{filter:brightness(1.3)}30%{filter:brightness(.5)}50%,100%{filter:brightness(1)}}
+@keyframes buzzGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(255,60,60,0))}50%{filter:drop-shadow(0 0 22px rgba(255,60,60,.75))}}
+@keyframes blink{50%{opacity:.25}}
+@keyframes hl{to{transform:skew(-10deg) scaleX(1)}}
+@keyframes nod{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-10deg)}}
+@keyframes drop{from{transform:translateY(-70px) rotate(calc(var(--r) + 14deg)) scale(1.1);opacity:0}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes wiggle{25%{transform:rotate(-6deg)}50%{transform:rotate(3deg)}75%{transform:rotate(-4deg)}}
+@keyframes slam{from{transform:scale(1.35) rotate(-5deg);opacity:0}}
+@keyframes pulse{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.05) rotate(2deg)}}
+@keyframes wobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg) scale(1.04)}}
+@keyframes squish{0%,100%{transform:scale(1,1)}45%{transform:scale(1.03,.96)}60%{transform:translateY(-10px) scale(.98,1.03)}}
+@keyframes hop{0%,100%,40%{transform:none}55%{transform:translateY(-16px) scale(.96,1.05)}70%{transform:translateY(0) scale(1.08,.92)}}
+@keyframes blinkEye{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}.vb h1 .hl::before{transform:skew(-10deg)}.vb .arrow path,.doodle path{stroke-dashoffset:0}}
+</style>
+
+<!-- ======================= A · SHOW ======================= -->
+<section class="v va" id="a" aria-label="Varianta A: Show">
+  <div class="floor" aria-hidden="true"></div>
+  <div class="beam l" aria-hidden="true"></div>
+  <div class="beam r" aria-hidden="true"></div>
+  <div class="curtain l" aria-hidden="true"></div>
+  <div class="curtain r" aria-hidden="true"></div>
+  <div class="valance" aria-hidden="true"></div>
+  <div class="topbar">
+    <button class="va-btn" type="button" aria-label="Žebříček" title="Žebříček"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 13H10a9 9 0 0 0 10 12M44 13h10a9 9 0 0 1-10 12" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M18 7h28v14a14 14 0 0 1-28 0zM27 35h10l1 8H26zM17 43h30v11H17z" fill="currentColor"/></svg></button>
+    <span class="applause">Potlesk</span>
+    <div class="rt">
+      <span class="va-score">★ 0</span>
+      <button class="va-btn" type="button" aria-label="Zvuk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
+    </div>
+  </div>
+  <div class="va-wrap">
+    <div class="sign"><h1><i>A víš</i><br>proč?</h1></div>
+    <div class="va-stage">
+      <div class="screen">
+        <div class="screen-box"><span class="card" id="a-screen"></span></div>
+        <span class="screen-cap" id="a-cap">Otázka večera č. 1</span>
+      </div>
+      <div class="podium">
+        <button class="buzzer play-demo" type="button">Hrát<small>zmáčkni bzučák</small></button>
+        <div class="stand" aria-hidden="true"></div>
+      </div>
+    </div>
+    <p class="va-hint">11 hádanek · jeden tip · trefa = body</p>
+  </div>
+</section>
+
+<!-- ======================= B · SEŠIT ======================= -->
+<section class="v vb" id="b" aria-label="Varianta B: Sešit">
+  <div class="holes" aria-hidden="true"></div>
+  <div class="margin" aria-hidden="true"></div>
+  <div class="topbar">
+    <button class="vb-tab" type="button">🏆 Žebříček</button>
+    <div class="rt">
+      <span class="vb-score"><b>0</b> bodů</span>
+      <button class="vb-snd" type="button" aria-label="Zvuk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
+    </div>
+  </div>
+  <div class="vb-wrap">
+    <div class="vb-stage">
+      <div class="pol p1"><span class="card" data-k="0"></span><span>#1</span></div>
+      <div class="pol p2"><span class="card" data-k="1"></span><span>#2</span></div>
+      <div class="pol p3"><span class="card" data-k="2"></span><span>#3</span></div>
+      <svg class="doodle d1" viewBox="0 0 60 60" aria-hidden="true"><path d="M30 6l6 16 17 1-13 11 5 17-15-10-15 10 5-17L7 23l17-1z"/></svg>
+      <svg class="doodle d2" viewBox="0 0 44 44" aria-hidden="true"><path d="M8 30c6-18 22-24 28-12s-10 18-16 10"/></svg>
+      <div>
+        <h1><span class="hl">A víš</span><br>proč<span class="qm">?</span></h1>
+        <p class="sub">vtipné hádanky do lavice</p>
+      </div>
+    </div>
+    <div class="vb-row">
+      <div class="vb-play">
+        <svg class="arrow" viewBox="0 0 120 80" aria-hidden="true"><text x="2" y="20">klikni!</text><path d="M14 30c10 30 50 40 92 30m-14-12l15 12-17 6"/></svg>
+        <button class="play play-demo" type="button">Hrát!</button>
+      </div>
+      <div class="postit"><b>Pravidla</b><ol><li>koukni na otázku</li><li>máš jen jeden tip</li><li>trefa = body ⭐</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= C · KOMIKS ======================= -->
+<section class="v vc" id="c" aria-label="Varianta C: Komiks">
+  <div class="topbar">
+    <button class="vc-tag" type="button">Žebříček!</button>
+    <div class="rt">
+      <span class="vc-score">★ 0</span>
+      <button class="vc-snd" type="button" aria-label="Zvuk"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#111"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
+    </div>
+  </div>
+  <div class="vc-grid">
+    <div class="panel pn1"><span class="cap">Mezitím ve třídě…</span><div class="burst" aria-hidden="true"></div><h1>A víš<br>proč?!</h1></div>
+    <div class="panel pn2">
+      <p class="bub" id="c-bub" aria-live="polite">A víš proč má kečup červenou barvu?</p>
+      <div class="mascot" aria-hidden="true">
+        <svg viewBox="0 0 220 300"><ellipse class="m-shadow" cx="114" cy="293" rx="42" ry="6"/><g class="m-body"><path class="m-ink" transform="translate(0 9)" d="M60 112C60 66 100 42 130 44C168 46 190 76 184 112C178 146 140 156 124 178C116 190 114 202 114 214"/><path class="m-ink" d="M60 112C60 66 100 42 130 44C168 46 190 76 184 112C178 146 140 156 124 178C116 190 114 202 114 214"/><path class="m-fill" d="M60 112C60 66 100 42 130 44C168 46 190 76 184 112C178 146 140 156 124 178C116 190 114 202 114 214"/><path class="m-shine" d="M66 98C70 78 86 62 104 56"/><g transform="translate(110 44)"><g class="eye"><circle class="ew" r="15"/><g class="pupil"><circle r="7.5" cx="3" cy="2"/><circle cx="0.5" cy="-0.5" r="2.4"/></g></g></g><g transform="translate(150 47)"><g class="eye"><circle class="ew" r="15"/><g class="pupil"><circle r="7.5" cx="3" cy="2"/><circle cx="0.5" cy="-0.5" r="2.4"/></g></g></g><path class="m-mouth" d="M119 64Q131 76 143 64"/></g><g class="m-dot"><circle class="m-dotx" cx="114" cy="266" r="26"/><circle class="m-dotc" cx="114" cy="258" r="26"/></g></svg>
+      </div>
+    </div>
+    <div class="panel pn3"><span class="cap">Teď ty!</span><button class="pow play-demo" type="button">Hrát!</button></div>
+    <div class="panel pn4"><span class="cap" id="c-cap1">Hádanka #1</span><span class="card" data-k="3"></span><span class="say">Hmm…?</span></div>
+    <div class="panel pn5"><span class="cap" id="c-cap2">Hádanka #2</span><span class="card" data-k="4"></span><span class="say">Že by…?</span></div>
+    <div class="vc-rules"><span>1 · koukni</span><span>2 · jeden tip</span><span>3 · body + série!</span></div>
+  </div>
+</section>
+
+<nav class="tabs" role="tablist" aria-label="Styl úvodní obrazovky">
+  <button type="button" role="tab" aria-selected="true" aria-controls="a" data-v="a"><b>A</b>Show</button>
+  <button type="button" role="tab" aria-selected="false" aria-controls="b" data-v="b"><b>B</b>Sešit</button>
+  <button type="button" role="tab" aria-selected="false" aria-controls="c" data-v="c"><b>C</b>Komiks</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+  const R = [
+    ['kecup', 761, 773, 'Víš proč má kečup červenou barvu?'], ['snek', 759, 778, 'Víš proč šnek nejezdí autobusem?'],
+    ['zirafa', 761, 775, 'Víš proč žirafa má dlouhý krk?'], ['pravitko', 786, 799, 'Víš proč pravítko nikdy nelže?'],
+    ['babicka', 761, 775, 'Víš proč babička neslyší?'], ['houba', 756, 779, 'Víš proč se houba bojí tabule?'],
+    ['tuzka', 761, 774, 'Víš proč je tužka plešatá?'], ['prestavky', 757, 778, 'Víš proč jsou ve škole přestávky?'],
+    ['lea', 760, 776, 'Víš proč Lea chodí do 5. třídy?'], ['hrnce', 759, 777, 'Víš proč mají ve školní jídelně velké hrnce?'],
+    ['dvere', 762, 774, 'Víš proč jsou v bytě dveře?']
+  ].map(([id, a, b, q]) => ({ src: `obrazky/${id}.webp`, w: 1536, h: 1024, split: [a, b], q: 'A ' + q.charAt(0).toLowerCase() + q.slice(1) }));
+  const $ = id => document.getElementById(id);
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Question half of a picture, same crop as in the game.
+  function halves(el, p) {
+    const [a, b] = p.split, wa = p.w - b, m = Math.min(a, wa), free = p.w - m;
+    el.style.setProperty('--ar', (m / p.h).toFixed(4));
+    el.style.setProperty('--img', `url("${p.src}")`);
+    el.style.setProperty('--qpos', ((a - m) / 2 / free * 100).toFixed(2) + '%');
+  }
+  const pick = [...R].sort(() => Math.random() - .5);
+  document.querySelectorAll('.card[data-k]').forEach(el => halves(el, pick[+el.dataset.k]));
+
+  // A: the "question of the evening" screen flips through the riddles
+  let ai = 0;
+  const screen = $('a-screen'), cap = $('a-cap');
+  const showA = () => { halves(screen, R[ai]); cap.textContent = `Otázka večera č. ${ai + 1}`; };
+  showA();
+  setInterval(() => {
+    if (!$('a').classList.contains('on')) return;
+    screen.style.opacity = '0';
+    setTimeout(() => { ai = (ai + 1) % R.length; showA(); screen.style.opacity = '1'; }, reduced() ? 0 : 350);
+  }, 3000);
+
+  // C: the mascot types out the riddles in its speech bubble
+  const bub = $('c-bub'); let ci = 0, typer = 0;
+  function say(t) {
+    clearInterval(typer);
+    if (reduced()) { bub.textContent = t; return; }
+    let n = 0; bub.textContent = '';
+    typer = setInterval(() => { bub.textContent = t.slice(0, ++n); if (n >= t.length) clearInterval(typer); }, 32);
+  }
+  setInterval(() => { if ($('c').classList.contains('on')) { ci = (ci + 1) % R.length; say(R[ci].q); } }, 4200);
+
+  // switcher: shows one variant and replays its entrance animation
+  const tabs = [...document.querySelectorAll('.tabs button')];
+  function showV(v) {
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.v === v)));
+    document.querySelectorAll('.v').forEach(s => s.classList.toggle('on', s.id === v));
+    if (v === 'c') say(R[ci].q);
+    try { history.replaceState(null, '', '#' + v); } catch (e) {}
+  }
+  tabs.forEach(t => t.addEventListener('click', () => showV(t.dataset.v)));
+  showV(['a', 'b', 'c'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'a');
+
+  const toast = $('toast');
+  document.querySelectorAll('.play-demo').forEach(b => b.addEventListener('click', () => {
+    toast.textContent = 'Ukázka stylu. Hra se spustí, až si vybereš variantu.';
+    toast.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('on'), 2600);
+  }));
+})();
+</script>

@@ -9,3 +9,5 @@ web/api/spravce-heslo.php
 node_modules/
 tools/*-prof/
 shots/
+package-lock.json
+.claude/
